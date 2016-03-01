@@ -7,25 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6E9C66121C8613A900CFDE56 /* eos in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6E9C66061C86128C00CFDE56 /* eos */; };
 		6E9C661B1C86141900CFDE56 /* EOS.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66141C86141900CFDE56 /* EOS.c */; };
 		6E9C661C1C86141900CFDE56 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66161C86141900CFDE56 /* main.c */; };
 		6E9C661D1C86141900CFDE56 /* Parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66171C86141900CFDE56 /* Parameters.c */; };
 		6E9C661E1C86141900CFDE56 /* Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66191C86141900CFDE56 /* Vector.c */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		6E9C66111C86136C00CFDE56 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "/Users/clebsongraeff/Pesquisa/Pos-doc - Hadron-quark phase transition/Programas/EOS";
-			dstSubfolderSpec = 0;
-			files = (
-				6E9C66121C8613A900CFDE56 /* eos in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6E9C66061C86128C00CFDE56 /* eos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = eos; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +76,6 @@
 			buildPhases = (
 				6E9C66021C86128C00CFDE56 /* Sources */,
 				6E9C66031C86128C00CFDE56 /* Frameworks */,
-				6E9C66111C86136C00CFDE56 /* CopyFiles */,
 			);
 			buildRules = (
 			);

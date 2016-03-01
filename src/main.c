@@ -66,7 +66,7 @@ int main(int argc, char * argv[])
 		double m = 0;
 		
 		char filename[256];
-		sprintf(filename, "Gap/Gap_dens_%f.dat", barionic_density);
+		sprintf(filename, "data/gap/gap_dens_%f.dat", barionic_density);
 		FILE * f = fopen(filename, "w");
 		gap_equation_input input;
 		input.barionic_density = barionic_density;
@@ -135,63 +135,63 @@ int main(int argc, char * argv[])
 	
     // Write pressure, energy, chemical_potential, density, ...
 	
-	WriteVectorsToFile("densities.dat",
+	WriteVectorsToFile("data/densities.dat",
 					   "# barionic, proton, and neutron densities\n",
 					   3,
 					   barionic_density_vector,
 					   proton_density_vector,
 					   neutron_density_vector);
 	
-	WriteVectorsToFile("fermi_momentum.dat",
+	WriteVectorsToFile("data/fermi_momentum.dat",
 					   "# barionic density, proton fermi momentum, neutron fermi momentum\n",
 					   3,
 					   barionic_density_vector,
 					   proton_fermi_momentum_vector,
 					   neutron_fermi_momentum_vector);
 	
-	WriteVectorsToFile("mass.dat",
+	WriteVectorsToFile("data/mass.dat",
 					   "# barionic density, mass\n",
 					   2,
 					   barionic_density_vector,
 					   mass_vector);
 	
-	WriteVectorsToFile("scalar_density.dat",
+	WriteVectorsToFile("data/scalar_density.dat",
 					   "# barionic density, scalar density\n",
 					   2,
 					   barionic_density_vector,
 					   scalar_density_vector);
 	
-	WriteVectorsToFile("thermodynamic_potential.dat",
+	WriteVectorsToFile("data/thermodynamic_potential.dat",
 					   "# density, grand canonical potential per unit volume\n",
 					   2,
 					   barionic_density_vector, termodynamic_potential_vector);
 	
-	WriteVectorsToFile("kinectic_energy.dat",
+	WriteVectorsToFile("data/kinectic_energy.dat",
 					   "# density, kinectic energy per unit volume\n",
 					   2,
 					   barionic_density_vector,
 					   kinectic_energy_density_vector);
 	
-	WriteVectorsToFile("pressure.dat",
+	WriteVectorsToFile("data/pressure.dat",
 					   "# barionic density, pressure\n",
 					   2,
 					   barionic_density_vector,
 					   pressure_vector);
 	
-	WriteVectorsToFile("energy_density.dat",
+	WriteVectorsToFile("data/energy_density.dat",
 					   "# barionic density, energy per unit volume\n",
 					   2,
 					   barionic_density_vector,
 					   energy_density_vector);
 	
-	WriteVectorsToFile("chemical_potentials.dat",
+	WriteVectorsToFile("data/chemical_potentials.dat",
 					   "# barionic dentisy, proton chemical potential, neutron chemical potential",
 					   3,
 					   barionic_density_vector,
 					   proton_chemical_potential_vector,
 					   neutron_chemical_potential_vector);
 	
-	WriteVectorsToFile("proton_chemical_potential-mass.dat",
+	WriteVectorsToFile("data/proton_chemical_potential-mass.dat",
 					   "# proton chemical potential, mass\n",
 					   2,
 					   proton_chemical_potential_vector,
@@ -200,7 +200,7 @@ int main(int argc, char * argv[])
 	gsl_vector * energy_by_nucleon_vector = VectorNewVectorFromDivisionElementByElement(energy_density_vector,
 																						barionic_density_vector);
 	
-	WriteVectorsToFile("energy_by_nucleon.dat",
+	WriteVectorsToFile("data/energy_by_nucleon.dat",
 					   "# energy / barionic density = energy by nucleon \n"
 					   "# barionic density, energy / barionic density\n",
 					   2,
