@@ -1,6 +1,7 @@
-data/
+*.dat
 Debug/
-xcode_eos/Build
+DerivedData
+eos.xcodeproj
 .DS_Store
 eos
 *.o
