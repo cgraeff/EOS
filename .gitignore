@@ -1,3 +1,6 @@
 data/
+Debug/
+xcode_eos/Build
+.DS_Store
 eos
 *.o
