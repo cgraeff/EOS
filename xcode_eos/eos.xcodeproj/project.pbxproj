@@ -1,0 +1,265 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6E9C661B1C86141900CFDE56 /* EOS.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66141C86141900CFDE56 /* EOS.c */; };
+		6E9C661C1C86141900CFDE56 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66161C86141900CFDE56 /* main.c */; };
+		6E9C661D1C86141900CFDE56 /* Parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66171C86141900CFDE56 /* Parameters.c */; };
+		6E9C661E1C86141900CFDE56 /* Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E9C66191C86141900CFDE56 /* Vector.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6E9C66061C86128C00CFDE56 /* eos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = eos; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E9C66131C86141900CFDE56 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = ../../src/Constants.h; sourceTree = "<group>"; };
+		6E9C66141C86141900CFDE56 /* EOS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = EOS.c; path = ../../src/EOS.c; sourceTree = "<group>"; };
+		6E9C66151C86141900CFDE56 /* EOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EOS.h; path = ../../src/EOS.h; sourceTree = "<group>"; };
+		6E9C66161C86141900CFDE56 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../../src/main.c; sourceTree = "<group>"; };
+		6E9C66171C86141900CFDE56 /* Parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Parameters.c; path = ../../src/Parameters.c; sourceTree = "<group>"; };
+		6E9C66181C86141900CFDE56 /* Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parameters.h; path = ../../src/Parameters.h; sourceTree = "<group>"; };
+		6E9C66191C86141900CFDE56 /* Vector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Vector.c; path = ../../src/Vector.c; sourceTree = "<group>"; };
+		6E9C661A1C86141900CFDE56 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../src/Vector.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6E9C66031C86128C00CFDE56 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6E9C65FD1C86128C00CFDE56 = {
+			isa = PBXGroup;
+			children = (
+				6E9C66081C86128C00CFDE56 /* xcode_eos */,
+				6E9C66071C86128C00CFDE56 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6E9C66071C86128C00CFDE56 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6E9C66061C86128C00CFDE56 /* eos */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6E9C66081C86128C00CFDE56 /* xcode_eos */ = {
+			isa = PBXGroup;
+			children = (
+				6E9C66131C86141900CFDE56 /* Constants.h */,
+				6E9C66141C86141900CFDE56 /* EOS.c */,
+				6E9C66151C86141900CFDE56 /* EOS.h */,
+				6E9C66161C86141900CFDE56 /* main.c */,
+				6E9C66171C86141900CFDE56 /* Parameters.c */,
+				6E9C66181C86141900CFDE56 /* Parameters.h */,
+				6E9C66191C86141900CFDE56 /* Vector.c */,
+				6E9C661A1C86141900CFDE56 /* Vector.h */,
+			);
+			path = xcode_eos;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6E9C66051C86128C00CFDE56 /* eos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6E9C660D1C86128C00CFDE56 /* Build configuration list for PBXNativeTarget "eos" */;
+			buildPhases = (
+				6E9C66021C86128C00CFDE56 /* Sources */,
+				6E9C66031C86128C00CFDE56 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = eos;
+			productName = xcode_eos;
+			productReference = 6E9C66061C86128C00CFDE56 /* eos */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6E9C65FE1C86128C00CFDE56 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Clebson Graeff";
+				TargetAttributes = {
+					6E9C66051C86128C00CFDE56 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 6E9C66011C86128C00CFDE56 /* Build configuration list for PBXProject "eos" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6E9C65FD1C86128C00CFDE56;
+			productRefGroup = 6E9C66071C86128C00CFDE56 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6E9C66051C86128C00CFDE56 /* eos */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6E9C66021C86128C00CFDE56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E9C661E1C86141900CFDE56 /* Vector.c in Sources */,
+				6E9C661D1C86141900CFDE56 /* Parameters.c in Sources */,
+				6E9C661C1C86141900CFDE56 /* main.c in Sources */,
+				6E9C661B1C86141900CFDE56 /* EOS.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6E9C660B1C86128C00CFDE56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6E9C660C1C86128C00CFDE56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6E9C660E1C86128C00CFDE56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "/usr/local/include/**";
+				LIBRARY_SEARCH_PATHS = "/usr/local/lib/**";
+				OTHER_LDFLAGS = (
+					"-lm",
+					"-lgsl",
+					"-lgslcblas",
+				);
+				PRODUCT_NAME = eos;
+			};
+			name = Debug;
+		};
+		6E9C660F1C86128C00CFDE56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "/usr/local/include/**";
+				LIBRARY_SEARCH_PATHS = "/usr/local/lib/**";
+				OTHER_LDFLAGS = (
+					"-lm",
+					"-lgsl",
+					"-lgslcblas",
+				);
+				PRODUCT_NAME = eos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6E9C66011C86128C00CFDE56 /* Build configuration list for PBXProject "eos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E9C660B1C86128C00CFDE56 /* Debug */,
+				6E9C660C1C86128C00CFDE56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6E9C660D1C86128C00CFDE56 /* Build configuration list for PBXNativeTarget "eos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E9C660E1C86128C00CFDE56 /* Debug */,
+				6E9C660F1C86128C00CFDE56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6E9C65FE1C86128C00CFDE56 /* Project object */;
+}
