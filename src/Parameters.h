@@ -16,9 +16,11 @@ typedef struct _parameters
 	double G_RHO; 	// vector-isovector vector_coupling (fm^2)
 	double G_SV;	// (fm^8)
 	double G_VRHO;	// (fm^8)
+    double G_SRHO;  // (fm^8)
 
 	double CUTOFF;	// \Lambda (MeV)
 	double nucleon_mass; // (MeV)
+    double bare_mass;
 
 	double minimum_density; // (fm^-3)
 	double maximum_density; // (fm^-3)
