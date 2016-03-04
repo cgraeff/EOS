@@ -67,7 +67,7 @@ double GapEquation(double mass, void * input)
 	double gap_1st_term = (2.0 * parameters.G_S * total_scalar_density) * CONST_HBAR_C;
 	double gap_2nd_term = (- 2.0 * parameters.G_SV * total_scalar_density * pow(param->barionic_density, 2.0)) * CONST_HBAR_C;
 
-	return mass + gap_1st_term + gap_2nd_term;
+	return mass + gap_1st_term + gap_2nd_term - parameters.bare_mass;
 }
 
 double scalar_density(double mass, double fermi_momentum, double cutoff)

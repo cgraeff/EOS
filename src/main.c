@@ -66,7 +66,7 @@ int main(int argc, char * argv[])
 		double m = 0;
 		
 		char filename[256];
-		sprintf(filename, "data/gap/gap_dens_%f.dat", barionic_density);
+		sprintf(filename, "data/gap/gap_dens_%d.dat", i);
 		FILE * f = fopen(filename, "w");
 		gap_equation_input input;
 		input.barionic_density = barionic_density;
