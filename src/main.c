@@ -69,7 +69,8 @@ int main(int argc, char * argv[])
 		sprintf(filename, "data/gap/gap_dens_%d.dat", i);
 		FILE * f = fopen(filename, "w");
 		gap_equation_input input;
-		input.barionic_density = barionic_density;
+		input.proton_density = proton_density;
+        input.neutron_density = neutron_density;
 		input.neutron_fermi_momentum = neutron_fermi_momentum;
 		input.proton_fermi_momentum = proton_fermi_momentum;
 		
@@ -78,10 +79,10 @@ int main(int argc, char * argv[])
 			m += 0.5;
 		}
 		
-		double mass = SolveGapEquation(barionic_density, proton_fermi_momentum, neutron_fermi_momentum);
+		double mass = SolveGapEquation(proton_density, neutron_density, proton_fermi_momentum, neutron_fermi_momentum);
 
-		double total_scalar_density = scalar_density(mass, proton_fermi_momentum, parameters.CUTOFF)
-									  + scalar_density(mass, neutron_fermi_momentum, parameters.CUTOFF);
+		double total_scalar_density = scalar_density_function(mass, proton_fermi_momentum, parameters.CUTOFF)
+									  + scalar_density_function(mass, neutron_fermi_momentum, parameters.CUTOFF);
 
 		
         gsl_vector_set(scalar_density_vector, i , total_scalar_density);

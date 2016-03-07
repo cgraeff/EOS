@@ -13,13 +13,14 @@ typedef struct _gap_equation_input{
 	
 	double proton_fermi_momentum;
 	double neutron_fermi_momentum;
-	double barionic_density;
+    double proton_density;
+    double neutron_density;
 	
 } gap_equation_input;
 
-double SolveGapEquation(double barionic_density, double proton_fermi_momentum, double neutron_fermi_momentum);
+double SolveGapEquation(double proton_density, double neutron_density, double proton_fermi_momentum, double neutron_fermi_momentum);
 
-double scalar_density(double mass, double fermi_momentum, double cutoff);
+double scalar_density_function(double mass, double fermi_momentum, double cutoff);
 
 double ProtonChemicalPotential(double proton_fermi_momentum,
                                double scalar_density,

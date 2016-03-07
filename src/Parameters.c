@@ -7,6 +7,8 @@
 //
 
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "Parameters.h"
 
@@ -15,7 +17,11 @@ Parameters parameters;
 void ParametersSetup(void)
 {
 
-	parameters.nucleon_mass = 939.0;
+    // The following parameters are used with all parameterizations.
+    // They may be tweaked for each parameterization individually
+    // by having the values set inside the switch, with the other
+    // parameters.
+    parameters.nucleon_mass = 939.0; // (MeV)
 
 	parameters.minimum_density = 0.01; // fm^-3
 	parameters.maximum_density = 0.35; // fm^-3
@@ -46,19 +52,19 @@ void ParametersSetup(void)
         eNJL2mSigmaRho1
     }Parameters_set;
     
-    Parameters_set par = eNJL1;
+    Parameters_set par = eNJL1m;
     
     // Parameters from Helena Pais, Débora P. Menezes, Constança Providência
     switch (par) {
         case eNJL1:
-            parameters.G_S = 4.855;
-            parameters.G_V = 4.65;
-            parameters.G_SV = -6.583;
-            parameters.G_RHO = 0.5876;
-            parameters.G_VRHO = 0.0;
-            parameters.G_SRHO = 0.0;
-            parameters.CUTOFF = 388.189;
-            parameters.bare_mass = 0.0;
+            parameters.G_S = 4.855;         // (fm)^2
+            parameters.G_V = 4.65;          // (fm)^2
+            parameters.G_SV = -6.583;       // (fm)^8
+            parameters.G_RHO = 0.5876;      // (fm)^2
+            parameters.G_VRHO = 0.0;        // (fm)^8
+            parameters.G_SRHO = 0.0;        // (fm)^8
+            parameters.CUTOFF = 388.189;    // (MeV)
+            parameters.bare_mass = 0.0;     // (MeV)
             break;
 
         case eNJL1OmegaRho1:
@@ -171,6 +177,8 @@ void ParametersSetup(void)
             parameters.bare_mass = 500.0;
             break;
         default:
+            printf("You must choose one of the availeable parameterizations.\n");
+            exit(EXIT_FAILURE);
             break;
     }
 }

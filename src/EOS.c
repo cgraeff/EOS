@@ -14,7 +14,7 @@
 #include "Constants.h"
 #include "EOS.h"
 
-double SolveGapEquation(double barionic_density, double proton_fermi_momentum, double neutron_fermi_momentum)
+double SolveGapEquation(double proton_density, double neutron_density, double proton_fermi_momentum, double neutron_fermi_momentum)
 {
 	const gsl_root_fsolver_type * T	= gsl_root_fsolver_bisection; // Maybe this would be better: gsl_root_fsolver_brent
 
@@ -22,7 +22,8 @@ double SolveGapEquation(double barionic_density, double proton_fermi_momentum, d
 
 	gap_equation_input input;
 	
-	input.barionic_density = barionic_density;
+	input.proton_density = proton_density;
+    input.neutron_density = neutron_density;
 	input.proton_fermi_momentum = proton_fermi_momentum;
 	input.neutron_fermi_momentum = neutron_fermi_momentum;
 	
@@ -60,17 +61,21 @@ double SolveGapEquation(double barionic_density, double proton_fermi_momentum, d
 double GapEquation(double mass, void * input)
 {
 	gap_equation_input * param = (gap_equation_input *)input;
+    
+    double barionic_density = param->proton_density + param->neutron_density;
+    double rho_3 = param->proton_density - param->neutron_density;
 	
-	double total_scalar_density = scalar_density(mass, param->proton_fermi_momentum, parameters.CUTOFF)
-								  + scalar_density(mass, param->neutron_fermi_momentum, parameters.CUTOFF);
+	double scalar_density = scalar_density_function(mass, param->proton_fermi_momentum, parameters.CUTOFF)
+                            + scalar_density_function(mass, param->neutron_fermi_momentum, parameters.CUTOFF);
 	
-	double gap_1st_term = (2.0 * parameters.G_S * total_scalar_density) * CONST_HBAR_C;
-	double gap_2nd_term = (- 2.0 * parameters.G_SV * total_scalar_density * pow(param->barionic_density, 2.0)) * CONST_HBAR_C;
+	double gap_1st_term = 2.0  * CONST_HBAR_C * parameters.G_S * scalar_density;
+	double gap_2nd_term = - 2.0 * CONST_HBAR_C * parameters.G_SV * scalar_density * pow(barionic_density, 2.0);
+    double gap_3rd_term = - 2.0  * CONST_HBAR_C * parameters.G_SRHO * scalar_density * pow(rho_3, 2.0);
 
-	return mass + gap_1st_term + gap_2nd_term - parameters.bare_mass;
+	return mass + gap_1st_term + gap_2nd_term + gap_3rd_term - parameters.bare_mass;
 }
 
-double scalar_density(double mass, double fermi_momentum, double cutoff)
+double scalar_density_function(double mass, double fermi_momentum, double cutoff)
 {
 	return pow(CONST_HBAR_C, -3.0) * (mass / pow(M_PI, 2.0)) * (F0(mass, fermi_momentum) - F0(mass, cutoff));
 }
@@ -96,7 +101,8 @@ double ProtonChemicalPotential(double proton_fermi_momentum,
 												+ parameters.G_SV * barionic_density * pow(scalar_density, 2.0)
 												+ parameters.G_RHO * rho_3
 												+ parameters.G_VRHO * pow(rho_3, 2.0) * barionic_density
-												+ parameters.G_VRHO * pow(barionic_density, 2.0) * rho_3);
+												+ parameters.G_VRHO * pow(barionic_density, 2.0) * rho_3
+                                                + parameters.G_SRHO * pow(scalar_density, 2.0) * rho_3);
 	
 	return chemical_potential;
 
@@ -113,11 +119,12 @@ double NeutronChemicalPotential(double neutron_fermi_momentum,
 	
 	double rho_3 = (proton_density - neutron_density);
 	
-	chemical_potential += (2.0 * parameters.G_V * barionic_density
-						  + 2.0 * parameters.G_SV * barionic_density * pow(scalar_density, 2.0)
-						  - 2.0 * parameters.G_RHO * rho_3
-						  + 2.0 * parameters.G_VRHO * pow(rho_3, 2.0) * barionic_density
-						  - 2.0 * parameters.G_VRHO * pow(barionic_density, 2.0) * rho_3) * CONST_HBAR_C;
+	chemical_potential += 2.0 * CONST_HBAR_C * (parameters.G_V * barionic_density
+                                                + parameters.G_SV * barionic_density * pow(scalar_density, 2.0)
+                                                - parameters.G_RHO * rho_3
+                                                + parameters.G_VRHO * pow(rho_3, 2.0) * barionic_density
+                                                - parameters.G_VRHO * pow(barionic_density, 2.0) * rho_3
+                                                - parameters.G_SRHO * pow(scalar_density, 2.0) * rho_3);
 	
 	return chemical_potential;
 }
@@ -168,7 +175,7 @@ double TermodynamicPotential(double scalar_density,
 {
 	double rho_3 = proton_density - neutron_density;
 	
-	double omega = kinectic_energy_density;
+	double omega = kinectic_energy_density + parameters.bare_mass * scalar_density;
 	
 	omega += - proton_chemical_potential * proton_density
 			 - neutron_chemical_potential * neutron_density;
@@ -177,7 +184,8 @@ double TermodynamicPotential(double scalar_density,
 			  + parameters.G_V * pow(barionic_density, 2.0)
 			  + parameters.G_SV * pow(scalar_density * barionic_density, 2.0)
 			  + parameters.G_RHO * pow(rho_3, 2.0)
-			  + parameters.G_VRHO * pow(barionic_density * rho_3, 2.0)) * CONST_HBAR_C;
+			  + parameters.G_VRHO * pow(barionic_density * rho_3, 2.0)
+              + parameters.G_SRHO * pow(scalar_density * rho_3, 2.0)) * CONST_HBAR_C;
 	
 	return omega;
 }
