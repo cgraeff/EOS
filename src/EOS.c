@@ -146,7 +146,9 @@ double VacuumKinecticEnergyDensity()
 
 double VacuumEnergyDensity()
 {
-	return VacuumKinecticEnergyDensity() - parameters.G_S * pow(vacuum_scalar_density(), 2.0) * CONST_HBAR_C;
+    double scalar_density_0 = vacuum_scalar_density();
+
+	return VacuumKinecticEnergyDensity() + parameters.bare_mass * scalar_density_0 - parameters.G_S * pow(scalar_density_0, 2.0) * CONST_HBAR_C;
 }
 
 double EnergyDensity(double pressure,
@@ -201,10 +203,6 @@ double F2(double mass, double momentum)
 {
 	double E = sqrt(pow(mass, 2.0) + pow(momentum, 2.0));
 				   
-	double e_kin_1st_term = (1.0 / 8.0) * (-3.0 * pow(mass, 2.0) * momentum + 2.0 * pow(momentum, 3.0)) * E
-                            + (3.0 / 8.0) * pow(mass, 4.0) * log((momentum + E) / mass);
-    
-    double e_kin_2nd_term = parameters.bare_mass * mass * 0.5 * (momentum * E - 0.5 * pow(mass, 2.0) * log((E + momentum) / mass));
-    
-    return e_kin_1st_term + e_kin_2nd_term;
+	return (1.0 / 8.0) * (-3.0 * pow(mass, 2.0) * momentum + 2.0 * pow(momentum, 3.0)) * E
+           + (3.0 / 8.0) * pow(mass, 4.0) * log((momentum + E) / mass);
 }
