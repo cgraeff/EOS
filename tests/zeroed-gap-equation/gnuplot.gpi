@@ -1,0 +1,19 @@
+do for [i=0:8]{
+	do for [j=0:8]{
+		input_file = sprintf("data/gap_dens_%d_%d.dat", i, j)
+		output_file_png = sprintf("graph/gap_dens_%d_%d.png", i, j)
+		output_file_tex = sprintf("graph/gap_dens_%d_%d.tex", i, j)
+
+		set xlabel '$m$ (MeV)'
+		set ylabel '$f(m)$ (MeV)'
+
+		set term png
+		set out output_file_png
+
+		plot input_file w l notitle, 0 notitle
+
+		set term tikz size 14cm, 9cm
+		set out output_file_tex
+		replot
+	}
+}

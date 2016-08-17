@@ -28,7 +28,7 @@ typedef struct _parameters
 	double minimum_density; // (fm^-3)
 	double maximum_density; // (fm^-3)
 
-	double points_number; // Number of points in which the above range will be divide into
+	int points_number; // Number of points in which the above range will be divide into
 
 	double proton_fraction; // (no dimension)
 	
@@ -38,6 +38,8 @@ typedef struct _parameters
 	
 	double lower_bound_gap_eq_solve;
 	double upper_bound_gap_eq_solve;
+    
+    double temperature;
 	
 
 } Parameters;

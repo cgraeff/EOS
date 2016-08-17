@@ -8,13 +8,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <gsl/gsl_vector.h>
 
+#include "CommandlineOptions.h"
+#include "Tests.h"
 #include "Parameters.h"
 #include "Constants.h"
-#include "EOS.h"
-#include "Vector.h"
+#include "ZeroTemperatureEOS.h"
+#include "AuxiliaryFunctions.h"
 
 int SolveZeroTemperatureEOS();
 int SolveFiniteTemperatureEOS();
@@ -56,69 +59,58 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-i/*  The EOS is solved in the function bellow. In this particular implementation, 
-    the barionic density was chosen as the running parameter.
+/* 
+ * The EOS for zero temperature are solved in the function bellow. 
+ * In this particular implementation, the barionic density was chosen
+ * as the running parameter.
  */
 int SolveZeroTemperatureEOS(){
     
-    double barionic_density = parameters.minimum_density;
-	
-	// Define the density step. We subtract 1 from the number of points to
-	// make sure that the last point corresponds to maximum_density
-    double density_step = (parameters.maximum_density - parameters.minimum_density)
-    / (parameters.points_number - 1);
+    // Print name of parametrization
+    if (options.verbose)
+        printf("Calculation performed with %s parameters set.\n", parameters.parameters_set_identifier);
     
     gsl_vector * barionic_density_vector = gsl_vector_alloc(parameters.points_number);
-    gsl_vector * proton_density_vector = gsl_vector_alloc(parameters.points_number);
-    gsl_vector * neutron_density_vector = gsl_vector_alloc(parameters.points_number);
-	
-	gsl_vector * proton_fermi_momentum_vector = gsl_vector_alloc(parameters.points_number);
-	gsl_vector * neutron_fermi_momentum_vector = gsl_vector_alloc(parameters.points_number);
-	
     gsl_vector * scalar_density_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * mass_vector = gsl_vector_alloc(parameters.points_number);
 	
 	gsl_vector * proton_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * neutron_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
-	gsl_vector * kinectic_energy_density_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * termodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
 	
 	gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * energy_density_vector = gsl_vector_alloc(parameters.points_number);
 	
+    /*
+     * Main loop (on barionic density)
+     */
+    
+    if (options.verbose)
+        printf("Solving gap equation and equations of state ...\n");
+    
+    double barionic_density = parameters.minimum_density;
+    
+    // Define the density step. We subtract 1 from the number of points to
+    // make sure that the last point corresponds to maximum_density
+    double density_step = (parameters.maximum_density - parameters.minimum_density)
+                          / (double)(parameters.points_number - 1);
+    
     for (int i = 0; i < parameters.points_number; i++){
         
-        barionic_density += density_step;
+        gsl_vector_set(barionic_density_vector, i, barionic_density);
+        
+        if (options.verbose){
+            printf("\r\tBarionic density: %f", barionic_density);
+            fflush(stdout);
+        }
         
         double proton_density = parameters.proton_fraction * barionic_density;
         double neutron_density = (1.0 - parameters.proton_fraction) * barionic_density;
         
         gsl_vector_set(barionic_density_vector, i, barionic_density);
-        gsl_vector_set(proton_density_vector, i , proton_density);
-        gsl_vector_set(neutron_density_vector, i, neutron_density);
 		
 		double proton_fermi_momentum = pow(3.0 * pow(CONST_HBAR_C, 3.0) * pow(M_PI, 2.0) * proton_density, 1.0 / 3.0);
 		double neutron_fermi_momentum = pow(3.0 * pow(CONST_HBAR_C, 3.0) * pow(M_PI, 2.0) * neutron_density, 1.0 / 3.0);
-		
-		gsl_vector_set(proton_fermi_momentum_vector, i, proton_fermi_momentum);
-		gsl_vector_set(neutron_fermi_momentum_vector, i, neutron_fermi_momentum);
-		
-		
-		double m = 0;
-		
-		char filename[256];
-		sprintf(filename, "output/gap/data/gap_dens_%d.dat", i);
-		FILE * f = fopen(filename, "w");
-		gap_equation_input input;
-		input.proton_density = proton_density;
-        input.neutron_density = neutron_density;
-		input.neutron_fermi_momentum = neutron_fermi_momentum;
-		input.proton_fermi_momentum = proton_fermi_momentum;
-		
-		while (m < 2000) {
-			fprintf(f, "%20.15E\t%20.15E\n", m, GapEquation(m, &input));
-			m += 0.5;
-		}
 		
 		double mass = SolveGapEquation(proton_density, neutron_density, proton_fermi_momentum, neutron_fermi_momentum);
 
@@ -149,8 +141,6 @@ int SolveZeroTemperatureEOS(){
         
 		double kinectic_energy_density = KinecticEnergyDensity(mass, proton_fermi_momentum, neutron_fermi_momentum);
 		
-		gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
-
 		double termodynamic_potential = TermodynamicPotential(total_scalar_density,
 															  barionic_density,
 															  proton_density,
@@ -172,35 +162,30 @@ int SolveZeroTemperatureEOS(){
 											  neutron_density);
 		
 		gsl_vector_set(energy_density_vector, i, energy_density);
- 
+        
+        // Prepare next iteration
+        barionic_density += density_step;
     }
+    if (options.verbose)
+        printf("\n"); // As print inside the loop doesn't use new line, we need one now
+    
+    // Calculate energy per particle
+    gsl_vector * energy_by_nucleon_vector = VectorNewVectorFromDivisionElementByElement(energy_density_vector,
+                                                                                        barionic_density_vector);
+    
+    /*
+     * Save results
+     */
 	
-    // Write pressure, energy, chemical_potential, density, ...
-	
+    if (options.verbose)
+        printf("Saving results ...\n");
+    
 	char filepath[512];
     char path[256];
     path[0] = 0;
     
     if (options.dirs)
         strcpy(path, "output/IR/data/");
-    
-    strcpy(filepath, path);
-    strcat(filepath, "densities.dat");
-	WriteVectorsToFile(filepath,
-					   "# barionic, proton, and neutron densities\n",
-					   3,
-					   barionic_density_vector,
-					   proton_density_vector,
-					   neutron_density_vector);
-					   
-	strcpy(filepath, path);
-    strcat(filepath, "fermi_momentum.dat");    
-	WriteVectorsToFile(filepath,
-					   "# barionic density, proton fermi momentum, neutron fermi momentum\n",
-					   3,
-					   barionic_density_vector,
-					   proton_fermi_momentum_vector,
-					   neutron_fermi_momentum_vector);
 
 	strcpy(filepath, path);
     strcat(filepath, "mass.dat"); 
@@ -225,30 +210,22 @@ int SolveZeroTemperatureEOS(){
 					   2,
 					   barionic_density_vector, termodynamic_potential_vector);
 
-    strcpy(filepath, path);
-    strcat(filepath, "kinectic_energy.dat");
-	WriteVectorsToFile(filepath,
-					   "# density, kinectic energy per unit volume\n",
-					   2,
-					   barionic_density_vector,
-					   kinectic_energy_density_vector);
 
     strcpy(filepath, path);
-    strcat(filepath, "chemical_potentials.dat");	
+    strcat(filepath, "proton_chemical_potential.dat");
 	WriteVectorsToFile(filepath,
-					   "# barionic dentisy, proton chemical potential, neutron chemical potential",
-					   3,
-					   barionic_density_vector,
-					   proton_chemical_potential_vector,
-					   neutron_chemical_potential_vector);
-
-    strcpy(filepath, path);
-    strcat(filepath, "proton_chemical_potential-mass.dat");	
-	WriteVectorsToFile(filepath,
-					   "# proton chemical potential, mass\n",
+					   "# barionic dentisy, proton chemical potential\n",
 					   2,
-					   proton_chemical_potential_vector,
-					   mass_vector);
+					   barionic_density_vector,
+					   proton_chemical_potential_vector);
+    
+    strcpy(filepath, path);
+    strcat(filepath, "neutron_chemical_potential.dat");
+    WriteVectorsToFile(filepath,
+                       "# barionic dentisy, neutron chemical potential\n",
+                       2,
+                       barionic_density_vector,
+                       neutron_chemical_potential_vector);
 	
 	if (options.dirs)
         strcpy(path, "output/EOS/data/");
@@ -268,17 +245,36 @@ int SolveZeroTemperatureEOS(){
 					   2,
 					   barionic_density_vector,
 					   energy_density_vector);
-					   
-	
-	gsl_vector * energy_by_nucleon_vector = VectorNewVectorFromDivisionElementByElement(energy_density_vector,
-																						barionic_density_vector);
+    
 	strcpy(filepath, path);
-    strcat(filepath, "energy_by_nucleon.dat");
+    strcat(filepath, "energy_density_per_particle.dat");
 	WriteVectorsToFile(filepath,
 					   "# energy / barionic density = energy by nucleon \n"
 					   "# barionic density, energy / barionic density\n",
 					   2,
 					   barionic_density_vector, energy_by_nucleon_vector);
+    
+    /*
+     * Clean up
+     */
+    
+    // Free vectors
+    gsl_vector_free(barionic_density_vector);
+    
+    gsl_vector_free(scalar_density_vector);
+    gsl_vector_free(mass_vector);
+    
+    gsl_vector_free(proton_chemical_potential_vector);
+    gsl_vector_free(neutron_chemical_potential_vector);
+    gsl_vector_free(termodynamic_potential_vector);
+    
+    gsl_vector_free(pressure_vector);
+    gsl_vector_free(energy_density_vector);
+    gsl_vector_free(energy_by_nucleon_vector);
+    
+    if (options.verbose)
+        printf("Done!\n");
+    
     return 0;
 }
 

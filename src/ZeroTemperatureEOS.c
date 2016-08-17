@@ -12,7 +12,7 @@
 
 #include "Parameters.h"
 #include "Constants.h"
-#include "EOS.h"
+#include "ZeroTemperatureEOS.h"
 
 double SolveGapEquation(double proton_density, double neutron_density, double proton_fermi_momentum, double neutron_fermi_momentum)
 {

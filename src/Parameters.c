@@ -48,14 +48,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 4.855;         // (fm)^2
-    p.parameters.G_V = 4.65;          // (fm)^2
-    p.parameters.G_SV = -6.583;       // (fm)^8
-    p.parameters.G_RHO = 0.5876;      // (fm)^2
-    p.parameters.G_VRHO = 0.0;        // (fm)^8
-    p.parameters.G_SRHO = 0.0;        // (fm)^8
-    p.parameters.CUTOFF = 388.189;    // (MeV)
-    p.parameters.bare_mass = 0.0;     // (MeV)
+    p.G_S = 4.855;         // (fm)^2
+    p.G_V = 4.65;          // (fm)^2
+    p.G_SV = -6.583;       // (fm)^8
+    p.G_RHO = 0.5876;      // (fm)^2
+    p.G_VRHO = 0.0;        // (fm)^8
+    p.G_SRHO = 0.0;        // (fm)^8
+    p.CUTOFF = 388.189;    // (MeV)
+    p.bare_mass = 0.0;     // (MeV)
 
   	AppendParametersSetToList(p);
     
@@ -66,14 +66,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1OmegaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 4.855;
-    p.parameters.G_V = 4.65;
-    p.parameters.G_SV = -6.583;
-    p.parameters.G_RHO = 0.5976;
-    p.parameters.G_VRHO = -1.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 388.189;
-    p.parameters.bare_mass = 0.0;
+    p.G_S = 4.855;
+    p.G_V = 4.65;
+    p.G_SV = -6.583;
+    p.G_RHO = 0.5976;
+    p.G_VRHO = -1.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 388.189;
+    p.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -83,15 +83,15 @@ void ParametersSetup(void)
   	    
     p.parameters_set_identifier = "eNJL1OmegaRho2";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
-      	
-    p.parameters.G_S = 4.855;
-    p.parameters.G_V = 4.65;
-    p.parameters.G_SV = -6.583;
-    p.parameters.G_RHO = 0.6476;
-    p.parameters.G_VRHO = -6.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 388.189;
-    p.parameters.bare_mass = 0.0;
+      
+    p.G_S = 4.855;
+    p.G_V = 4.65;
+    p.G_SV = -6.583;
+    p.G_RHO = 0.6476;
+    p.G_VRHO = -6.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 388.189;
+    p.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -102,14 +102,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 3.8;
-    p.parameters.G_V = 3.8;
-    p.parameters.G_SV = -4.228;
-    p.parameters.G_RHO = 0.6313;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 422.384;
-    p.parameters.bare_mass = 0.0;
+    p.G_S = 3.8;
+    p.G_V = 3.8;
+    p.G_SV = -4.228;
+    p.G_RHO = 0.6313;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 422.384;
+    p.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -120,14 +120,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2OmegaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 3.8;
-    p.parameters.G_V = 3.8;
-    p.parameters.G_SV = -4.288;
-    p.parameters.G_RHO = 0.6413;
-    p.parameters.G_VRHO = -1.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 422.384;
-    p.parameters.bare_mass = 0.0;
+    p.G_S = 3.8;
+    p.G_V = 3.8;
+    p.G_SV = -4.288;
+    p.G_RHO = 0.6413;
+    p.G_VRHO = -1.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 422.384;
+    p.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -138,14 +138,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL3";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 1.93;
-    p.parameters.G_V = 3.0;
-    p.parameters.G_SV = -1.8;
-    p.parameters.G_RHO = 0.65;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 534.815;
-    p.parameters.bare_mass = 0.0;
+    p.G_S = 1.93;
+    p.G_V = 3.0;
+    p.G_SV = -1.8;
+    p.G_RHO = 0.65;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 534.815;
+    p.bare_mass = 0.0;
      
     AppendParametersSetToList(p);
     
@@ -156,14 +156,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL3SigmaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 1.93;
-    p.parameters.G_V = 3;
-    p.parameters.G_SV = -1.8;
-    p.parameters.G_RHO = 0.0269;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 0.5;
-    p.parameters.CUTOFF = 534.815;
-    p.parameters.bare_mass = 0.0;
+    p.G_S = 1.93;
+    p.G_V = 3;
+    p.G_SV = -1.8;
+    p.G_RHO = 0.0269;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 0.5;
+    p.CUTOFF = 534.815;
+    p.bare_mass = 0.0;
      
     AppendParametersSetToList(p);
     
@@ -174,14 +174,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1m";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 1.3833;
-    p.parameters.G_V = 1.781;
-    p.parameters.G_SV = -2.943;
-    p.parameters.G_RHO = 0.7;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 478.248;
-    p.parameters.bare_mass = 450.0;
+    p.G_S = 1.3833;
+    p.G_V = 1.781;
+    p.G_SV = -2.943;
+    p.G_RHO = 0.7;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 478.248;
+    p.bare_mass = 450.0;
     
     AppendParametersSetToList(p);
     
@@ -192,14 +192,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1mSigmaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 1.3833;
-    p.parameters.G_V = 1.781;
-    p.parameters.G_SV = -2.943;
-    p.parameters.G_RHO = 0.0739;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 1.0;
-    p.parameters.CUTOFF = 478.248;
-    p.parameters.bare_mass = 450.0;
+    p.G_S = 1.3833;
+    p.G_V = 1.781;
+    p.G_SV = -2.943;
+    p.G_RHO = 0.0739;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 1.0;
+    p.CUTOFF = 478.248;
+    p.bare_mass = 450.0;
     
     AppendParametersSetToList(p);
     
@@ -210,14 +210,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2m";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 1.078;
-    p.parameters.G_V = 1.955;
-    p.parameters.G_SV = -2.74;
-    p.parameters.G_RHO = 0.75;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 0.0;
-    p.parameters.CUTOFF = 502.466;
-    p.parameters.bare_mass = 500.0;
+    p.G_S = 1.078;
+    p.G_V = 1.955;
+    p.G_SV = -2.74;
+    p.G_RHO = 0.75;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 0.0;
+    p.CUTOFF = 502.466;
+    p.bare_mass = 500.0;
     
     AppendParametersSetToList(p);
     
@@ -228,14 +228,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2mSigmaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.parameters.G_S = 1.078;
-    p.parameters.G_V = 1.955;
-    p.parameters.G_SV = -2.74;
-    p.parameters.G_RHO = 0.1114;
-    p.parameters.G_VRHO = 0.0;
-    p.parameters.G_SRHO = 1.0;
-    p.parameters.CUTOFF = 502.466;
-    p.parameters.bare_mass = 500.0;
+    p.G_S = 1.078;
+    p.G_V = 1.955;
+    p.G_SV = -2.74;
+    p.G_RHO = 0.1114;
+    p.G_VRHO = 0.0;
+    p.G_SRHO = 1.0;
+    p.CUTOFF = 502.466;
+    p.bare_mass = 500.0;
     
     AppendParametersSetToList(p);
     
@@ -307,31 +307,33 @@ Parameters NewCopyOfParametersSetFromTemplate()
     						  "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
     p.parameters_set_identifier = "Template";
 
-    parameters.nucleon_mass = 939.0; // (MeV)
+    p.nucleon_mass = 939.0; // (MeV)
 
-	parameters.minimum_density = 0.01; // fm^-3
-	parameters.maximum_density = 0.35; // fm^-3
+	p.minimum_density = 0.01; // fm^-3
+	p.maximum_density = 0.35; // fm^-3
 
-	parameters.points_number = 1000;
+	p.points_number = 1000;
 
-	parameters.proton_fraction = 0.5;
+	p.proton_fraction = 0.5;
 	
-	parameters.number_of_colors = 1;
-	parameters.number_of_flavors = 1;
+	p.number_of_colors = 1;
+	p.number_of_flavors = 1;
 	
-	parameters.degeneracy = (double)parameters.number_of_colors * (double)parameters.number_of_flavors / pow(M_PI, 2.0);
+	p.degeneracy = (double)parameters.number_of_colors * (double)parameters.number_of_flavors / pow(M_PI, 2.0);
 	
-	parameters.lower_bound_gap_eq_solve = 1.0E-3; // Low, but not zero. In zero f(M) = 0;
-	parameters.upper_bound_gap_eq_solve = 3000.0;	// MeV (about 150% of nucleon mass)
+	p.lower_bound_gap_eq_solve = 1.0E-3; // Low, but not zero. In zero f(M) = 0;
+	p.upper_bound_gap_eq_solve = 3000.0;	// MeV (about 150% of nucleon mass)
 	
-	parameters.G_S = 4.855;         // (fm)^2
-    parameters.G_V = 4.65;          // (fm)^2
-    parameters.G_SV = -6.583;       // (fm)^8
-    parameters.G_RHO = 0.5876;      // (fm)^2
-    parameters.G_VRHO = 0.0;        // (fm)^8
-    parameters.G_SRHO = 0.0;        // (fm)^8
-    parameters.CUTOFF = 388.189;    // (MeV)
-    parameters.bare_mass = 0.0;     // (MeV)
+	p.G_S = 4.855;         // (fm)^2
+    p.G_V = 4.65;          // (fm)^2
+    p.G_SV = -6.583;       // (fm)^8
+    p.G_RHO = 0.5876;      // (fm)^2
+    p.G_VRHO = 0.0;        // (fm)^8
+    p.G_SRHO = 0.0;        // (fm)^8
+    p.CUTOFF = 388.189;    // (MeV)
+    p.bare_mass = 0.0;     // (MeV)
+    
+    p.temperature = 0.0; // (MeV)
     
   	return p;
 }
@@ -364,7 +366,7 @@ void PrintParametersToFile(FILE * file)
 	fprintf(file, "number_of_flavors = %d\n", parameters.number_of_flavors);
 	
 	fprintf(file, "lower_bound_gap_eq_solve = %f\n", parameters.lower_bound_gap_eq_solve);
-	fprintf(file, "upper_bound_gap_eq_solve = %f\n", upper_bound_gap_eq_solve);
+	fprintf(file, "upper_bound_gap_eq_solve = %f\n", parameters.upper_bound_gap_eq_solve);
 	
 	fprintf(file, "G_S = %f\n", parameters.G_S);
     fprintf(file, "G_V = %f\n", parameters.G_V);
@@ -374,6 +376,7 @@ void PrintParametersToFile(FILE * file)
     fprintf(file, "G_SRHO = %f\n", parameters.G_SRHO);
     fprintf(file, "CUTOFF = %f\n", parameters.CUTOFF);
     fprintf(file, "bare_mass = %f\n", parameters.bare_mass);
+    fprintf(file, "temperature = %fzn", parameters.temperature);
     
     return;
 }

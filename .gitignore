@@ -1,7 +1,6 @@
-*.dat
-Debug/
-DerivedData
-eos.xcodeproj
 .DS_Store
-eos
+heos
 *.o
+*.dat
+*.log
+*.png

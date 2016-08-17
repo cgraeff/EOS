@@ -1,0 +1,41 @@
+set xlabel '$\rho_B$ ($\rm{fm}^{-3}$)'
+
+set ylabel "$m$ (MeV)"
+set term png
+set out "graph/mass.png"
+plot "data/mass.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/mass.tex"
+replot
+
+set ylabel '$\mu_p$ (MeV)'
+set term png
+set out "graph/proton_chemical_potential.png"
+plot "data/proton_chemical_potential.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/proton_chemical_potential.tex"
+replot
+
+set ylabel '$\mu_n$ (MeV)'
+set term png
+set out "graph/neutron_chemical_potential.png"
+plot "data/neutron_chemical_potential.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/neutron_chemical_potential.tex"
+replot
+
+set ylabel '$\omega$ (MeV)'
+set term png
+set out "graph/thermodynamic_potential.png"
+plot "data/thermodynamic_potential.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/thermodynamic_potential.tex"
+replot
+
+set ylabel '$\rho_s$ ($\rm{fm}^{-3}$)'
+set term png
+set out "graph/scalar_density.png"
+plot "data/scalar_density.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/scalar_density.tex"
+replot
