@@ -20,7 +20,8 @@
 
 void RunTests()
 {
-    
+    printf("Running tests ...\n");
+           
 #pragma mark Zeroed Gap Equation
     
     // Write the zeroed gap equation for a set of proton and neutron
@@ -29,6 +30,8 @@ void RunTests()
     // curve. This tests functions used in the zero temperature case.
 	if (true)
 	{
+        printf("\tZeroed Gap Equation\n");
+        
 		FILE * log_file = OpenFile("tests/zeroed-gap-equation/run.log");
      
         SetParametersSet("eNJL1");
@@ -82,4 +85,6 @@ void RunTests()
         
 		fclose(log_file);
 	}
+           
+    printf("done.\n");
 }
