@@ -1,4 +1,4 @@
-TARGET = eos
+TARGET = heos
 LIBS = -lm -lgsl -lgslcblas
 CC = gcc
 CFLAGS = -g -Wall -Wno-unknown-pragmas

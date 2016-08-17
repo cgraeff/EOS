@@ -1,19 +1,20 @@
 SHELL := /bin/bash # Use bash as shell
+TARGET = heos
 
 .PHONY: all run graph tests tgraph clean
 
 all:
 	cd src; make
 run:
-	./eos -d $(ARGS)
+	./$(TARGET) -d $(ARGS)
 graph:
 	for dir in `echo output/*/`; do cd "$$dir" && gnuplot gnuplot.gpi && cd ../..; done
 tests:
-	./eos -a $(ARGS)
+	./$(TARGET) -a $(ARGS)
 tgraph:
 	for dir in `echo tests/*/`; do cd "$$dir" && gnuplot gnuplot.gpi && cd ../..; done
 clean:
-	-rm -f eos
+	-rm -f $(TARGET)
 	cd src; make clean
 	find output -name "*.dat" -type f -delete
 	find output -name "*.log" -type f -delete
