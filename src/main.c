@@ -1,8 +1,8 @@
 //
 //  main.c
-//  EOS
+//  quarks EOS
 //
-//  Created by Clebson Graeff on 2/16/16.
+//  Created by Clebson Graeff on 2016-02-16.
 //  Copyright © 2016 Clebson Graeff. All rights reserved.
 //
 
@@ -16,9 +16,50 @@
 #include "EOS.h"
 #include "Vector.h"
 
+int SolveZeroTemperatureEOS();
+int SolveFiniteTemperatureEOS();
+
 int main(int argc, char * argv[])
 {
+    CommandlineOptionsParse(argc, argv);
     ParametersSetup();
+
+    if (options.tests){
+  		RunTests();
+        exit(EXIT_SUCCESS);
+    }
+
+  	// If option -p is used, set parameters set accordingly,
+	// otherwise, use default set
+  	SetParametersSet(options.parameterization);
+    
+    // If the temperature was chosen using
+    // commandline options, use it
+    // (-1.0 is a place holder value)
+    if (options.temp != -1.0)
+        parameters.temperature = options.temp;
+    
+    if (parameters.temperature == 0){
+        SolveZeroTemperatureEOS();
+    }
+    else if (parameters.temperature > 0){
+        //SolveFiniteTemperatureEOS();
+        printf("Finite temperature is not yet implemented.\n");
+        abort();
+    }
+    else{
+        printf("Values of temperature must be non-negative.\n");
+        printf("(%f was provided).\n", parameters.temperature);
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}
+
+i/*  The EOS is solved in the function bellow. In this particular implementation, 
+    the barionic density was chosen as the running parameter.
+ */
+int SolveZeroTemperatureEOS(){
     
     double barionic_density = parameters.minimum_density;
 	
@@ -66,7 +107,7 @@ int main(int argc, char * argv[])
 		double m = 0;
 		
 		char filename[256];
-		sprintf(filename, "data/gap/gap_dens_%d.dat", i);
+		sprintf(filename, "output/gap/data/gap_dens_%d.dat", i);
 		FILE * f = fopen(filename, "w");
 		gap_equation_input input;
 		input.proton_density = proton_density;
@@ -136,72 +177,104 @@ int main(int argc, char * argv[])
 	
     // Write pressure, energy, chemical_potential, density, ...
 	
-	WriteVectorsToFile("data/densities.dat",
+	char filepath[512];
+    char path[256];
+    path[0] = 0;
+    
+    if (options.dirs)
+        strcpy(path, "output/IR/data/");
+    
+    strcpy(filepath, path);
+    strcat(filepath, "densities.dat");
+	WriteVectorsToFile(filepath,
 					   "# barionic, proton, and neutron densities\n",
 					   3,
 					   barionic_density_vector,
 					   proton_density_vector,
 					   neutron_density_vector);
-	
-	WriteVectorsToFile("data/fermi_momentum.dat",
+					   
+	strcpy(filepath, path);
+    strcat(filepath, "fermi_momentum.dat");    
+	WriteVectorsToFile(filepath,
 					   "# barionic density, proton fermi momentum, neutron fermi momentum\n",
 					   3,
 					   barionic_density_vector,
 					   proton_fermi_momentum_vector,
 					   neutron_fermi_momentum_vector);
-	
-	WriteVectorsToFile("data/mass.dat",
+
+	strcpy(filepath, path);
+    strcat(filepath, "mass.dat"); 
+	WriteVectorsToFile(filepath,
 					   "# barionic density, mass\n",
 					   2,
 					   barionic_density_vector,
 					   mass_vector);
-	
-	WriteVectorsToFile("data/scalar_density.dat",
+					   
+    strcpy(filepath, path);
+    strcat(filepath, "scalar_density.dat");	
+	WriteVectorsToFile(filepath,
 					   "# barionic density, scalar density\n",
 					   2,
 					   barionic_density_vector,
 					   scalar_density_vector);
 	
-	WriteVectorsToFile("data/thermodynamic_potential.dat",
+	strcpy(filepath, path);
+    strcat(filepath, "thermodynamic_potential.dat");
+	WriteVectorsToFile(filepath,
 					   "# density, grand canonical potential per unit volume\n",
 					   2,
 					   barionic_density_vector, termodynamic_potential_vector);
-	
-	WriteVectorsToFile("data/kinectic_energy.dat",
+
+    strcpy(filepath, path);
+    strcat(filepath, "kinectic_energy.dat");
+	WriteVectorsToFile(filepath,
 					   "# density, kinectic energy per unit volume\n",
 					   2,
 					   barionic_density_vector,
 					   kinectic_energy_density_vector);
-	
-	WriteVectorsToFile("data/pressure.dat",
-					   "# barionic density, pressure\n",
-					   2,
-					   barionic_density_vector,
-					   pressure_vector);
-	
-	WriteVectorsToFile("data/energy_density.dat",
-					   "# barionic density, energy per unit volume\n",
-					   2,
-					   barionic_density_vector,
-					   energy_density_vector);
-	
-	WriteVectorsToFile("data/chemical_potentials.dat",
+
+    strcpy(filepath, path);
+    strcat(filepath, "chemical_potentials.dat");	
+	WriteVectorsToFile(filepath,
 					   "# barionic dentisy, proton chemical potential, neutron chemical potential",
 					   3,
 					   barionic_density_vector,
 					   proton_chemical_potential_vector,
 					   neutron_chemical_potential_vector);
-	
-	WriteVectorsToFile("data/proton_chemical_potential-mass.dat",
+
+    strcpy(filepath, path);
+    strcat(filepath, "proton_chemical_potential-mass.dat");	
+	WriteVectorsToFile(filepath,
 					   "# proton chemical potential, mass\n",
 					   2,
 					   proton_chemical_potential_vector,
 					   mass_vector);
 	
+	if (options.dirs)
+        strcpy(path, "output/EOS/data/");
+        	   
+	strcpy(filepath, path);
+    strcat(filepath, "pressure.dat");	
+	WriteVectorsToFile(filepath,
+					   "# barionic density, pressure\n",
+					   2,
+					   barionic_density_vector,
+					   pressure_vector);
+	
+    strcpy(filepath, path);
+    strcat(filepath, "energy_density.dat");
+	WriteVectorsToFile(filepath,
+					   "# barionic density, energy per unit volume\n",
+					   2,
+					   barionic_density_vector,
+					   energy_density_vector);
+					   
+	
 	gsl_vector * energy_by_nucleon_vector = VectorNewVectorFromDivisionElementByElement(energy_density_vector,
 																						barionic_density_vector);
-	
-	WriteVectorsToFile("data/energy_by_nucleon.dat",
+	strcpy(filepath, path);
+    strcat(filepath, "energy_by_nucleon.dat");
+	WriteVectorsToFile(filepath,
 					   "# energy / barionic density = energy by nucleon \n"
 					   "# barionic density, energy / barionic density\n",
 					   2,

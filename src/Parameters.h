@@ -1,8 +1,8 @@
 //
 //  Parameters.h
-//  EOS
+//  hadrons EOS
 //
-//  Created by Clebson Graeff on 2/16/16.
+//  Created by Clebson Graeff on 2016-02-16.
 //  Copyright © 2016 Clebson Graeff. All rights reserved.
 //
 
@@ -11,6 +11,9 @@
 
 typedef struct _parameters
 {
+    char * parameters_set_identifier;
+    char * parameters_set_origin;
+    
 	double G_S;		// scalar-isoscalar coupling (fm^2)
 	double G_V;		// vector-isoscalar coupling (fm^2)
 	double G_RHO; 	// vector-isovector vector_coupling (fm^2)
@@ -42,5 +45,8 @@ typedef struct _parameters
 extern Parameters parameters;
 
 void ParametersSetup(void);
+void SetParametersSet(char * parameters_set_identifier);
+
+void PrintParametersToFile(FILE * file);
 
 #endif /* Parameters_h */

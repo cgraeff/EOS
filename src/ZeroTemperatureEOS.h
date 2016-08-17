@@ -1,8 +1,8 @@
 //
 //  EOS.h
-//  EOS
+//  quarks EOS
 //
-//  Created by Clebson Graeff on 2/17/16.
+//  Created by Clebson Graeff on 2016-02-17.
 //  Copyright © 2016 Clebson Graeff. All rights reserved.
 //
 

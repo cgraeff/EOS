@@ -1,8 +1,8 @@
 //
 //  Constants.h
-//  EOS
+//  quarks EOS
 //
-//  Created by Clebson Graeff on 2/23/16.
+//  Created by Clebson Graeff on 2016-02-23.
 //  Copyright © 2016 Clebson Graeff. All rights reserved.
 //
 
