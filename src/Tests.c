@@ -31,9 +31,8 @@ void RunTests()
 	if (true)
 	{
         printf("\tZeroed Gap Equation\n");
-        
-		FILE * log_file = OpenFile("tests/zeroed-gap-equation/run.log");
-     
+        SetFilePath("tests/zeroed-gap-equation/data/");
+
         SetParametersSet("eNJL1");
         
         double neutron_density[9] = {0.0125, 0.025, 0.0375, 0.05, 0.0625, 0.075, 0.0875, 0.1, 0.1125};
@@ -53,7 +52,7 @@ void RunTests()
                 double m = 0;
                 
                 char filename[256];
-                sprintf(filename, "tests/zeroed-gap-equation/data/gap_dens_%d_%d.dat", i, j);
+                sprintf(filename, "gap_dens_%d_%d.dat", i, j);
                 
                 FILE * f = OpenFile(filename);
                 
@@ -72,6 +71,9 @@ void RunTests()
             }
         }
         
+        SetFilePath("tests/zeroed-gap-equation/");
+      	FILE * log_file = OpenFile("run.log");
+
         fprintf(log_file, "Write the zeroed gap equation for a set of proton and neutron\n"
                           "densities, for the eNJL1 parameters set. This serves for\n"
                           "verification purposes, as we should get a characteristic\n"

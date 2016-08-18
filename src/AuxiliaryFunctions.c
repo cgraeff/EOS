@@ -166,15 +166,28 @@ gsl_vector * VectorNewVectorFromDivisionElementByElement(gsl_vector * numerator,
 	return v;
 }
 
+static const char * open_file_prefix_path = NULL;
+
 FILE * OpenFile(const char filename[])
 {
-    // If there is no slash, it means that
-    // the file must me in the current dir
-    char * last_slash = strrchr(filename, '/');
-    
-    if (last_slash == NULL){
+    /*
+     * Check filename for '/' or overflow
+     */
+    if (NULL != strrchr(filename, '/')){
+        printf("OpenFile: Filename contains a path element. This is not supported.\n");
+        abort();
+    }
+
+    if (strlen(filename) > FILENAME_MAX_SIZE){
+        printf("OpenFile: Filename is too long.\n");
+        abort();
+    }
+
+    // If there is not prefix path,
+    // just open the file
+    if (open_file_prefix_path == NULL){
         FILE * file = fopen(filename, "w");
-        
+
         if (NULL == file) {
             printf("Could not open %s for writting.\n", filename);
             perror("Reason");
@@ -184,29 +197,88 @@ FILE * OpenFile(const char filename[])
         return file;
     }
     
-    // Recursivelly create dirs in path
-    char tmp[256];
-    char *p = NULL;
-    
-    snprintf(tmp, sizeof(tmp),"%s", filename);
+    /*
+     * Recursivelly create dirs in path
+     */
+    char tmp[PATH_MAX_SIZE];
 
-    for(p = tmp + 1; *p; p++)
-        if(*p == '/') {
-            *p = 0;
+    int length = snprintf(tmp, sizeof(tmp),"%s", open_file_prefix_path);
+
+    // Check for final slash in path
+    // add if it isn't there
+    if (tmp[length - 1] != '/'){
+
+        // Check if bounds will be exceded
+        // (the + 1 account for the /)
+        if (length + 1 >= PATH_MAX_SIZE){
+            printf("OpenFile: Path length is too long.\n");
+            abort();
+        }
+        tmp[length] = '/';
+        tmp[length + 1] = 0; // End of string must be null
+    }
+
+    // Create dirs:
+    //  Reads the string sequentially replacing occurences of '/' with null ('\0')
+    //  (this will effectivelly limit the string to characters before the '/' being replaced)
+    //  checking if the dir pointed by de resulting string exists, creating if it doesn't exist,
+    //  restoring the modified '/' (and moving to the next occurence of '/'. The loop will
+    //  continue ultil the pointer poinst to the final null character, whose value can be
+    //  obtained by deference and is zero, ending the loop.
+    char *pointer = NULL;
+    for(pointer = tmp; *pointer; pointer++)
+        if(*pointer == '/') {
+            *pointer = 0;
             struct stat st = {0};
             if (stat(tmp, &st) == -1)
                 mkdir(tmp, S_IRWXU);
-            *p = '/';
+            *pointer = '/';
         }
     
+    // Append filename to path.
+    // Use tmp as it will have the final '/'
+    char filepath[FILEPATH_MAX_SIZE];
+    strcpy(filepath, tmp);
+
+    int path_length = strlen(filepath);
+    int filename_length = strlen(filename);
+    int total_length = path_length + filename_length;
+
+    // Check if bounds will be exceded
+    if (total_length >= FILEPATH_MAX_SIZE){
+        printf("OpenFile: Path + filename length is too long.\n");
+        abort();
+    }
+
+    strcat(filepath, filename);
+
     // Finally, open the file
-    FILE * file = fopen(filename, "w");
+    FILE * file = fopen(filepath, "w");
     
     if (NULL == file) {
-        printf("Could not open %s for writting.\n", filename);
+        printf("OpenFile: Could not open %s for writting.\n", filename);
         perror("Reason");
         exit(EXIT_FAILURE);
     }
     
     return file;
+}
+
+void SetFilePath(const char path[])
+{
+    if (NULL == path){
+      open_file_prefix_path = NULL;
+      return;
+    }
+
+    switch (path[0]){
+    case '~':
+        printf("SetFilePath: ~ expansion is not supported.\n");
+        abort();
+        break;
+    case '.':
+        printf("SetFilePath: . is unnecessary, .. is unsuported.\n");
+    }
+
+    open_file_prefix_path = path;
 }

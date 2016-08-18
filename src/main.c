@@ -109,10 +109,15 @@ int SolveZeroTemperatureEOS(){
         
         gsl_vector_set(barionic_density_vector, i, barionic_density);
 		
-		double proton_fermi_momentum = pow(3.0 * pow(CONST_HBAR_C, 3.0) * pow(M_PI, 2.0) * proton_density, 1.0 / 3.0);
-		double neutron_fermi_momentum = pow(3.0 * pow(CONST_HBAR_C, 3.0) * pow(M_PI, 2.0) * neutron_density, 1.0 / 3.0);
+		double proton_fermi_momentum = pow(3.0 * pow(CONST_HBAR_C, 3.0) * pow(M_PI, 2.0) * proton_density,
+                                           1.0 / 3.0);
+		double neutron_fermi_momentum = pow(3.0 * pow(CONST_HBAR_C, 3.0) * pow(M_PI, 2.0) * neutron_density,
+                                            1.0 / 3.0);
 		
-		double mass = SolveGapEquation(proton_density, neutron_density, proton_fermi_momentum, neutron_fermi_momentum);
+		double mass = SolveGapEquation(proton_density,
+                                       neutron_density,
+                                       proton_fermi_momentum,
+                                       neutron_fermi_momentum);
 
 		double total_scalar_density = scalar_density_function(mass, proton_fermi_momentum, parameters.CUTOFF)
 									  + scalar_density_function(mass, neutron_fermi_momentum, parameters.CUTOFF);
@@ -180,101 +185,80 @@ int SolveZeroTemperatureEOS(){
     if (options.verbose)
         printf("Saving results ...\n");
     
-	char filepath[512];
-    char path[256];
-    path[0] = 0;
-    
     if (options.dirs)
-        strcpy(path, "output/IR/data/");
+        SetFilePath("output/IR/data/");
 
-	strcpy(filepath, path);
-    strcat(filepath, "mass.dat"); 
-	WriteVectorsToFile(filepath,
+    WriteVectorsToFile("mass.dat",
 					   "# barionic density, mass\n",
 					   2,
 					   barionic_density_vector,
 					   mass_vector);
-					   
-    strcpy(filepath, path);
-    strcat(filepath, "scalar_density.dat");	
-	WriteVectorsToFile(filepath,
+
+	WriteVectorsToFile("scalar_density.dat",
 					   "# barionic density, scalar density\n",
 					   2,
 					   barionic_density_vector,
 					   scalar_density_vector);
-	
-	strcpy(filepath, path);
-    strcat(filepath, "thermodynamic_potential.dat");
-	WriteVectorsToFile(filepath,
+
+	WriteVectorsToFile("thermodynamic_potential.dat",
 					   "# density, grand canonical potential per unit volume\n",
 					   2,
 					   barionic_density_vector, termodynamic_potential_vector);
 
-
-    strcpy(filepath, path);
-    strcat(filepath, "proton_chemical_potential.dat");
-	WriteVectorsToFile(filepath,
+	WriteVectorsToFile("proton_chemical_potential.dat",
 					   "# barionic dentisy, proton chemical potential\n",
 					   2,
 					   barionic_density_vector,
 					   proton_chemical_potential_vector);
-    
-    strcpy(filepath, path);
-    strcat(filepath, "neutron_chemical_potential.dat");
-    WriteVectorsToFile(filepath,
+
+    WriteVectorsToFile("neutron_chemical_potential.dat",
                        "# barionic dentisy, neutron chemical potential\n",
                        2,
                        barionic_density_vector,
                        neutron_chemical_potential_vector);
-	
+
 	if (options.dirs)
-        strcpy(path, "output/EOS/data/");
+        SetFilePath("output/EOS/data/");
         	   
-	strcpy(filepath, path);
-    strcat(filepath, "pressure.dat");	
-	WriteVectorsToFile(filepath,
+	WriteVectorsToFile("pressure.dat",
 					   "# barionic density, pressure\n",
 					   2,
 					   barionic_density_vector,
 					   pressure_vector);
-	
-    strcpy(filepath, path);
-    strcat(filepath, "energy_density.dat");
-	WriteVectorsToFile(filepath,
+
+	WriteVectorsToFile("energy_density.dat",
 					   "# barionic density, energy per unit volume\n",
 					   2,
 					   barionic_density_vector,
 					   energy_density_vector);
-    
-	strcpy(filepath, path);
-    strcat(filepath, "energy_density_per_particle.dat");
-	WriteVectorsToFile(filepath,
+
+	WriteVectorsToFile("energy_density_per_particle.dat",
 					   "# energy / barionic density = energy by nucleon \n"
 					   "# barionic density, energy / barionic density\n",
 					   2,
 					   barionic_density_vector, energy_by_nucleon_vector);
-    
+
     /*
      * Clean up
      */
     
     // Free vectors
     gsl_vector_free(barionic_density_vector);
-    
+
     gsl_vector_free(scalar_density_vector);
     gsl_vector_free(mass_vector);
     
     gsl_vector_free(proton_chemical_potential_vector);
     gsl_vector_free(neutron_chemical_potential_vector);
     gsl_vector_free(termodynamic_potential_vector);
-    
+
     gsl_vector_free(pressure_vector);
     gsl_vector_free(energy_density_vector);
     gsl_vector_free(energy_by_nucleon_vector);
     
     if (options.verbose)
         printf("Done!\n");
-    
+
     return 0;
 }
 
