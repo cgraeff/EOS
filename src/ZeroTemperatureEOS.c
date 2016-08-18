@@ -14,7 +14,10 @@
 #include "Constants.h"
 #include "ZeroTemperatureEOS.h"
 
-double SolveGapEquation(double proton_density, double neutron_density, double proton_fermi_momentum, double neutron_fermi_momentum)
+double SolveGapEquation(double proton_density,
+                        double neutron_density,
+                        double proton_fermi_momentum,
+                        double neutron_fermi_momentum)
 {
 	const gsl_root_fsolver_type * T	= gsl_root_fsolver_bisection; // Maybe this would be better: gsl_root_fsolver_brent
 
@@ -30,6 +33,13 @@ double SolveGapEquation(double proton_density, double neutron_density, double pr
 	gsl_function F;
 	F.function = &GapEquation;
 	F.params = &input;
+    
+    // Test if the limits straddle the root
+    // If they don't, we will assume that
+    // the mass = 0 root was found
+    if (GSL_SIGN(GSL_FN_EVAL(&F, parameters.lower_bound_gap_eq_solve))
+        == GSL_SIGN(GSL_FN_EVAL(&F, parameters.upper_bound_gap_eq_solve)))
+        return 0;
 	
 	gsl_root_fsolver_set(s, &F, parameters.lower_bound_gap_eq_solve, parameters.upper_bound_gap_eq_solve);
 	

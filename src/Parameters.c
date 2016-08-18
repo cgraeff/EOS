@@ -310,7 +310,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.nucleon_mass = 939.0; // (MeV)
 
 	p.minimum_density = 0.01; // fm^-3
-	p.maximum_density = 0.35; // fm^-3
+	p.maximum_density = 1.4; // fm^-3
 
 	p.points_number = 1000;
 

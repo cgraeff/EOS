@@ -240,9 +240,9 @@ FILE * OpenFile(const char filename[])
     char filepath[FILEPATH_MAX_SIZE];
     strcpy(filepath, tmp);
 
-    int path_length = strlen(filepath);
-    int filename_length = strlen(filename);
-    int total_length = path_length + filename_length;
+    unsigned long path_length = strlen(filepath);
+    unsigned long filename_length = strlen(filename);
+    unsigned long total_length = path_length + filename_length;
 
     // Check if bounds will be exceded
     if (total_length >= FILEPATH_MAX_SIZE){

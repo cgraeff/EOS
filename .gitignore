@@ -1,6 +1,8 @@
+heos_xcode
 .DS_Store
 heos
 *.o
 *.dat
 *.log
 *.png
+*.tex
