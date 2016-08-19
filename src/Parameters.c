@@ -303,13 +303,12 @@ Parameters NewCopyOfParametersSetFromTemplate()
 {
   	Parameters p;
 
-  	p.parameters_set_origin = "A standard parameters set. With theory parameters from eNJL1"
-    						  "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
+  	p.parameters_set_origin = "A standard parameters set. With no theory parameters.";
     p.parameters_set_identifier = "Template";
 
     p.nucleon_mass = 939.0; // (MeV)
 
-	p.minimum_density = 0.01; // fm^-3
+	p.minimum_density = 1.0E-5; // fm^-3
 	p.maximum_density = 1.4; // fm^-3
 
 	p.points_number = 1000;
@@ -319,19 +318,19 @@ Parameters NewCopyOfParametersSetFromTemplate()
 	p.number_of_colors = 1;
 	p.number_of_flavors = 1;
 	
-	p.degeneracy = (double)parameters.number_of_colors * (double)parameters.number_of_flavors / pow(M_PI, 2.0);
+	p.degeneracy = (double)p.number_of_colors * (double)p.number_of_flavors / pow(M_PI, 2.0);
 	
 	p.lower_bound_gap_eq_solve = 1.0E-3; // Low, but not zero. In zero f(M) = 0;
-	p.upper_bound_gap_eq_solve = 3000.0;	// MeV (about 150% of nucleon mass)
+	p.upper_bound_gap_eq_solve = 3000.0;	// MeV (much bigger than expected maximum mass)
 	
-	p.G_S = 4.855;         // (fm)^2
-    p.G_V = 4.65;          // (fm)^2
-    p.G_SV = -6.583;       // (fm)^8
-    p.G_RHO = 0.5876;      // (fm)^2
-    p.G_VRHO = 0.0;        // (fm)^8
-    p.G_SRHO = 0.0;        // (fm)^8
-    p.CUTOFF = 388.189;    // (MeV)
-    p.bare_mass = 0.0;     // (MeV)
+	p.G_S = 0;              // (fm)^2
+    p.G_V = 0;              // (fm)^2
+    p.G_SV = 0;             // (fm)^8
+    p.G_RHO = 0;            // (fm)^2
+    p.G_VRHO = 0.0;         // (fm)^8
+    p.G_SRHO = 0.0;         // (fm)^8
+    p.CUTOFF = 0.0;           // (MeV)
+    p.bare_mass = 0.0;      // (MeV)
     
     p.temperature = 0.0; // (MeV)
     

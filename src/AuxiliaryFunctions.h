@@ -21,8 +21,6 @@ int WriteIndexedVectorsToFile(const char * filename, const char * header, int ve
 
 gsl_vector * VectorNewVectorFromDivisionElementByElement(gsl_vector * numerator, gsl_vector * denominator);
 
-gsl_vector * VectorNewVectorFromDivisionElementByElement(gsl_vector * numerator, gsl_vector * denominator);
-
 // Simple functions to open files and creating directories if necessary.
 // The path should be defined by SetFilePath(). To unset, just call
 // SetFilePath(NULL). The total size of path and filename combined

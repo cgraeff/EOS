@@ -39,3 +39,13 @@ plot "data/scalar_density.dat" w l
 set term tikz size 14cm, 9cm
 set out "graph/scalar_density.tex"
 replot
+
+set ylabel '$\varepsilon_{\rm{kin}}$ (MeV)'
+set term png
+set out "graph/kinectic_energy_density.png"
+plot "data/kinectic_energy_density.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/kinectic_energy_density.tex"
+replot
+
+

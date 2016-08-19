@@ -76,6 +76,7 @@ int SolveZeroTemperatureEOS(){
 	
 	gsl_vector * proton_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * neutron_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
+    gsl_vector * kinectic_energy_density_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * termodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
 	
 	gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
@@ -145,6 +146,8 @@ int SolveZeroTemperatureEOS(){
 		gsl_vector_set(neutron_chemical_potential_vector, i, neutron_chemical_potential);
         
 		double kinectic_energy_density = KinecticEnergyDensity(mass, proton_fermi_momentum, neutron_fermi_momentum);
+        gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
+
 		
 		double termodynamic_potential = TermodynamicPotential(total_scalar_density,
 															  barionic_density,
@@ -177,6 +180,10 @@ int SolveZeroTemperatureEOS(){
     // Calculate energy per particle
     gsl_vector * energy_by_nucleon_vector = VectorNewVectorFromDivisionElementByElement(energy_density_vector,
                                                                                         barionic_density_vector);
+    
+    for (int i = 0; i < energy_by_nucleon_vector->size; i++)
+        gsl_vector_set(energy_by_nucleon_vector, i, gsl_vector_get(energy_by_nucleon_vector, i) - parameters.nucleon_mass);
+    
     
     /*
      * Save results
@@ -216,6 +223,12 @@ int SolveZeroTemperatureEOS(){
                        2,
                        barionic_density_vector,
                        neutron_chemical_potential_vector);
+    
+    WriteVectorsToFile("kinectic_energy_density.dat",
+                      "# barionic density, kinectic energy density\n",
+                      2,
+                      barionic_density_vector,
+                      kinectic_energy_density_vector);
 
 	if (options.dirs)
         SetFilePath("output/EOS/data/");

@@ -87,6 +87,9 @@ double GapEquation(double mass, void * input)
 
 double scalar_density_function(double mass, double fermi_momentum, double cutoff)
 {
+    if (mass == 0.0)
+        return 0.0;
+    
 	return pow(CONST_HBAR_C, -3.0) * (mass / pow(M_PI, 2.0)) * (F0(mass, fermi_momentum) - F0(mass, cutoff));
 }
 
@@ -211,6 +214,9 @@ double F0(double mass, double momentum)
 
 double F2(double mass, double momentum)
 {
+    if (mass == 0.0)
+        return pow(momentum, 4.0) / 4.0;
+    
 	double E = sqrt(pow(mass, 2.0) + pow(momentum, 2.0));
 				   
 	return (1.0 / 8.0) * (-3.0 * pow(mass, 2.0) * momentum + 2.0 * pow(momentum, 3.0)) * E
