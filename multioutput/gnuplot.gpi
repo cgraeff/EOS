@@ -44,7 +44,7 @@ replot
 # Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805
 
 set xlabel '$\rho_B$ ($\rm{fm}^{-3}$)'
-set ylabel '$\epsilon/\rho_B = E / A$ (MeV)'
+set ylabel '$\epsilon/\rho_B m_N = E / A$ (MeV)'
 
 set key reverse left Left
 
