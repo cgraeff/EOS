@@ -22,7 +22,11 @@ multirun:
 	done
 mgraph:
 	# in the following we exploit the fact that every parameterization starts with an 'e'
-	# and run their graphics routines, then we run the general one 
+	# and run their graphics routines, then we run the general one.
+	# Aditional sets may be listed in the 'echo' bellow with the form
+	# multioutput/a_set multioutput/another multioutput/prefix*/
+	# (Note that when using the wildcard *, the slash '/' at the end is
+	# necessary 
 	for dir in `echo multioutput/e*/`; do \
 		cd "$$dir"; \
 		for subdir in `echo */`; do \
