@@ -8,7 +8,31 @@ all:
 run:
 	./$(TARGET) -d $(ARGS)
 graph:
-	for dir in `echo output/*/`; do cd "$$dir" && gnuplot gnuplot.gpi && cd ../..; done
+	cd output; \
+	for dir in `echo */`; do \
+		cd "$$dir"; \
+		gnuplot gnuplot.gpi; \
+		cd ..; \
+	done
+multirun:
+	for key in eNJL1 eNJL2 eNJL3 eNJL1m eNJL2m; do \
+		./$(TARGET) -d -p "$$key"; \
+		if [ -d multioutput/"$$key" ]; then rm -r multioutput/"$$key"; fi; \
+		cp -r output multioutput/"$$key"; \
+	done
+mgraph:
+	# in the following we exploit the fact that every parameterization starts with an 'e'
+	# and run their graphics routines, then we run the general one 
+	for dir in `echo multioutput/e*/`; do \
+		cd "$$dir"; \
+		for subdir in `echo */`; do \
+			cd "$$subdir"; \
+			gnuplot gnuplot.gpi; \
+			cd ..; \
+		done; \
+		cd ../..; \
+	done; \
+	cd multioutput; gnuplot gnuplot.gpi
 tests:
 	./$(TARGET) -a $(ARGS)
 tgraph:
@@ -16,11 +40,8 @@ tgraph:
 clean:
 	-rm -f $(TARGET)
 	cd src; make clean
-	find output -name "*.dat" -type f -delete
-	find output -name "*.log" -type f -delete
-	find output -name "*.png" -type f -delete
-	find output -name "*.tex" -type f -delete
-	find tests -name "*.dat" -type f -delete
-	find tests -name "*.log" -type f -delete
-	find tests -name "*.png" -type f -delete
-	find tests -name "*.tex" -type f -delete
+	find . -name "*.dat" -type f -delete
+	find . -name "*.log" -type f -delete
+	find . -name "*.png" -type f -delete
+	find . -name "*.tex" -type f -delete
+	-rm -rf multioutput/e*/

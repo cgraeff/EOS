@@ -1,0 +1,67 @@
+# Reproduces Fig. 2 for mass from
+# Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805
+
+set xlabel '$\rho_B$ ($\rm{fm}^{-3}$)'
+
+set ylabel "$m$ (MeV)"
+set term png
+set out "graph/mass.png"
+plot "eNJL1/IR/data/mass.dat" w l dashtype 1 t 'eNJL1', \
+	 "eNJL2/IR/data/mass.dat" w l dashtype 2 t 'eNJL2', \
+	 "eNJL3/IR/data/mass.dat" w l dashtype 3 t 'eNJL3', \
+	 "eNJL1m/IR/data/mass.dat" w l dashtype 4 t 'eNJL1m', \
+	 "eNJL2m/IR/data/mass.dat" w l dashtype 5 t 'eNJL2m', \
+
+set term tikz size 14cm, 9cm
+set out "graph/mass.tex"
+replot
+
+# Reproduces Fig. 2 for pressure from
+# Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805
+
+set xlabel '$\rho_B$ ($\rm{fm}^{-3}$)'
+set ylabel '$p$ (MeV)'
+
+set key reverse left Left
+
+set xrange[0:0.5]
+set yrange[-6:60]
+
+set term png
+set out "graph/pressure.png"
+
+plot "eNJL1/EOS/data/pressure.dat" w l dashtype 1 t 'eNJL1', \
+     "eNJL2/EOS/data/pressure.dat" w l dashtype 2 t 'eNJL2', \
+     "eNJL3/EOS/data/pressure.dat" w l dashtype 3 t 'eNJL3', \
+     "eNJL1m/EOS/data/pressure.dat" w l dashtype 4 t 'eNJL1m', \
+     "eNJL2m/EOS/data/pressure.dat" w l dashtype 5 t 'eNJL2m'
+
+set term tikz size 14cm, 9cm
+set out "graph/pressure.tex"
+replot
+
+# Reproduces Fig. 2 for E/A from
+# Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805
+
+set xlabel '$\rho_B$ ($\rm{fm}^{-3}$)'
+set ylabel '$\epsilon/\rho_B = E / A$ (MeV)'
+
+set key reverse left Left
+
+set xrange[0:0.5]
+set yrange[-18:40]
+
+set term png
+set out "graph/energy_density_per_particle.png"
+
+plot "eNJL1/EOS/data/energy_density_per_particle.dat" w l dashtype 1 t 'eNJL1', \
+	 "eNJL2/EOS/data/energy_density_per_particle.dat" w l dashtype 2 t 'eNJL2', \
+	 "eNJL3/EOS/data/energy_density_per_particle.dat" w l dashtype 3 t 'eNJL3', \
+	 "eNJL1m/EOS/data/energy_density_per_particle.dat" w l dashtype 4 t 'eNJL1m', \
+	 "eNJL2m/EOS/data/energy_density_per_particle.dat" w l dashtype 5 t 'eNJL2m', \
+
+set term tikz size 14cm, 9cm
+set out "graph/energy_density_per_particle.tex"
+replot
+
+

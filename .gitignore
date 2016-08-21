@@ -2,6 +2,7 @@ heos_xcode
 .DS_Store
 heos
 *.o
+*.swp
 *.dat
 *.log
 *.png
