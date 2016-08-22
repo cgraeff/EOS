@@ -1,6 +1,9 @@
 SHELL := /bin/bash # Use bash as shell
 TARGET = heos
 
+# List set for multirun
+MULTIRUN_SETS = eNJL1 eNJL2 eNJL3 eNJL1m eNJL2m
+
 .PHONY: all run graph tests tgraph clean
 
 all:
@@ -15,20 +18,14 @@ graph:
 		cd ..; \
 	done
 multirun:
-	for key in eNJL1 eNJL2 eNJL3 eNJL1m eNJL2m; do \
+	for key in $(MULTIRUN_SETS); do \
 		./$(TARGET) -d -p "$$key"; \
 		if [ -d multioutput/"$$key" ]; then rm -r multioutput/"$$key"; fi; \
 		cp -r output multioutput/"$$key"; \
 	done
 mgraph:
-	# in the following we exploit the fact that every parameterization starts with an 'e'
-	# and run their graphics routines, then we run the general one.
-	# Aditional sets may be listed in the 'echo' bellow with the form
-	# multioutput/a_set multioutput/another multioutput/prefix*/
-	# (Note that when using the wildcard *, the slash '/' at the end is
-	# necessary 
-	for dir in `echo multioutput/e*/`; do \
-		cd "$$dir"; \
+	for dir in $(MULTIRUN_SETS); do \
+		cd "multioutput/$$dir"; \
 		for subdir in `echo */`; do \
 			cd "$$subdir"; \
 			gnuplot gnuplot.gpi; \
@@ -48,4 +45,4 @@ clean:
 	find . -name "*.log" -type f -delete
 	find . -name "*.png" -type f -delete
 	find . -name "*.tex" -type f -delete
-	-rm -rf multioutput/e*/
+	cd multioutput; rm -rf $(MULTIRUN_SETS)
