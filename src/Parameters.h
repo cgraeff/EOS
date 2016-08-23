@@ -32,10 +32,6 @@ typedef struct _parameters
 
 	double proton_fraction; // (no dimension)
 	
-	int number_of_colors;
-	int number_of_flavors;
-	double degeneracy;
-	
 	double lower_bound_gap_eq_solve;
 	double upper_bound_gap_eq_solve;
     

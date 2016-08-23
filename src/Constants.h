@@ -13,6 +13,8 @@
 #endif /* Constants_h */
 
 #define CONST_HBAR_C 197.326
+#define CTE_NUM_COLORS 1
+#define CTE_NUM_FLAVORS 1
 
 // Parameters for root finding in the solution of the Gap Equation
 //		CONST_ABS_ERROR_GAP_EQ_SOLVING: An absolute error in MeV for the solution of the Gap Equation

@@ -145,15 +145,17 @@ double NeutronChemicalPotential(double neutron_fermi_momentum,
 
 double KinecticEnergyDensity(double mass, double proton_fermi_momentum, double neutron_fermi_momentum)
 {
-	double proton_kinectic_energy = parameters.degeneracy * (F2(mass, proton_fermi_momentum) - F2(mass, parameters.CUTOFF));
-	double neutron_kinectic_energy = parameters.degeneracy * (F2(mass, neutron_fermi_momentum) - F2(mass, parameters.CUTOFF));
+	double proton_kinectic_energy = (CTE_NUM_COLORS  / pow(M_PI, 2.0))
+                                    * (F2(mass, proton_fermi_momentum) - F2(mass, parameters.CUTOFF));
+	double neutron_kinectic_energy = (CTE_NUM_COLORS / pow(M_PI, 2.0))
+                                     * (F2(mass, neutron_fermi_momentum) - F2(mass, parameters.CUTOFF));
 	
 	return (proton_kinectic_energy + neutron_kinectic_energy) / (pow(CONST_HBAR_C, 3.0));
 }
 
 double VacuumKinecticEnergyDensity()
 {
-	return 2.0 * parameters.degeneracy * (pow(CONST_HBAR_C, -3.0))
+	return 2.0 * (CTE_NUM_COLORS / pow(M_PI, 2.0)) * (pow(CONST_HBAR_C, -3.0))
 		   * (F2(parameters.nucleon_mass, 0) - F2(parameters.nucleon_mass, parameters.CUTOFF));
 }
 

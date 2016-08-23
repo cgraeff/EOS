@@ -314,12 +314,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
 	p.points_number = 1000;
 
 	p.proton_fraction = 0.5;
-	
-	p.number_of_colors = 1;
-	p.number_of_flavors = 1;
-	
-	p.degeneracy = (double)p.number_of_colors * (double)p.number_of_flavors / pow(M_PI, 2.0);
-	
+		
 	p.lower_bound_gap_eq_solve = 1.0E-3; // Low, but not zero. In zero f(M) = 0;
 	p.upper_bound_gap_eq_solve = 3000.0;	// MeV (much bigger than expected maximum mass)
 	
@@ -360,9 +355,6 @@ void PrintParametersToFile(FILE * file)
 	fprintf(file, "points_number = %d\n", parameters.points_number);
 
 	fprintf(file, "proton_fraction = %f\n", parameters.proton_fraction);
-	
-	fprintf(file, "number_of_colors = %d\n", parameters.number_of_colors);
-	fprintf(file, "number_of_flavors = %d\n", parameters.number_of_flavors);
 	
 	fprintf(file, "lower_bound_gap_eq_solve = %f\n", parameters.lower_bound_gap_eq_solve);
 	fprintf(file, "upper_bound_gap_eq_solve = %f\n", parameters.upper_bound_gap_eq_solve);
