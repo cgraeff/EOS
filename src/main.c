@@ -120,8 +120,8 @@ int SolveZeroTemperatureEOS(){
                                        proton_fermi_momentum,
                                        neutron_fermi_momentum);
 
-		double total_scalar_density = scalar_density_function(mass, proton_fermi_momentum, parameters.CUTOFF)
-									  + scalar_density_function(mass, neutron_fermi_momentum, parameters.CUTOFF);
+		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.CUTOFF)
+									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.CUTOFF);
 
 		
         gsl_vector_set(scalar_density_vector, i , total_scalar_density);

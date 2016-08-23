@@ -20,7 +20,7 @@ typedef struct _gap_equation_input{
 
 double SolveGapEquation(double proton_density, double neutron_density, double proton_fermi_momentum, double neutron_fermi_momentum);
 
-double scalar_density_function(double mass, double fermi_momentum, double cutoff);
+double ScalarDensity(double mass, double fermi_momentum, double cutoff);
 
 double ProtonChemicalPotential(double proton_fermi_momentum,
                                double scalar_density,

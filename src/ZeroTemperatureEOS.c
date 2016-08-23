@@ -75,8 +75,8 @@ double GapEquation(double mass, void * input)
     double barionic_density = param->proton_density + param->neutron_density;
     double rho_3 = param->proton_density - param->neutron_density;
 	
-	double scalar_density = scalar_density_function(mass, param->proton_fermi_momentum, parameters.CUTOFF)
-                            + scalar_density_function(mass, param->neutron_fermi_momentum, parameters.CUTOFF);
+	double scalar_density = ScalarDensity(mass, param->proton_fermi_momentum, parameters.CUTOFF)
+                            + ScalarDensity(mass, param->neutron_fermi_momentum, parameters.CUTOFF);
 	
 	double gap_1st_term = 2.0  * CONST_HBAR_C * parameters.G_S * scalar_density;
 	double gap_2nd_term = - 2.0 * CONST_HBAR_C * parameters.G_SV * scalar_density * pow(barionic_density, 2.0);
@@ -85,7 +85,7 @@ double GapEquation(double mass, void * input)
 	return mass + gap_1st_term + gap_2nd_term + gap_3rd_term - parameters.bare_mass;
 }
 
-double scalar_density_function(double mass, double fermi_momentum, double cutoff)
+double ScalarDensity(double mass, double fermi_momentum, double cutoff)
 {
     if (mass == 0.0)
         return 0.0;
@@ -93,7 +93,7 @@ double scalar_density_function(double mass, double fermi_momentum, double cutoff
 	return pow(CONST_HBAR_C, -3.0) * (mass / pow(M_PI, 2.0)) * (F0(mass, fermi_momentum) - F0(mass, cutoff));
 }
 
-double vacuum_scalar_density()
+double VacuumScalarDensity()
 {
 	return 2.0 * pow(CONST_HBAR_C, -3.0) * (parameters.nucleon_mass / pow(M_PI, 2.0))
 			* (F0(parameters.nucleon_mass, 0.0) - F0(parameters.nucleon_mass, parameters.CUTOFF));
@@ -161,7 +161,7 @@ double VacuumKinecticEnergyDensity()
 
 double VacuumEnergyDensity()
 {
-    double scalar_density_0 = vacuum_scalar_density();
+    double scalar_density_0 = VacuumScalarDensity();
 
 	return VacuumKinecticEnergyDensity() + parameters.bare_mass * scalar_density_0 - parameters.G_S * pow(scalar_density_0, 2.0) * CONST_HBAR_C;
 }
