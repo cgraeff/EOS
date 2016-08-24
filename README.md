@@ -1,6 +1,6 @@
 # Hadrons EOS
 
-This code calculates the Equations of State for quarks according the SU(2)
+This program calculates the Equations of State for quarks according the SU(2)
 version of the extended NJL model (eNJL). As references we use (Pais 2016).
 
 1. **(Pais 2016)** Helena Pais, Débora P. Menezes, and Constança Providência,
@@ -8,10 +8,19 @@ version of the extended NJL model (eNJL). As references we use (Pais 2016).
    Nambu–Jona-Lasinio model*, Phys. Rev. C 93, 065805 – Published 8 June 2016,
    [DOI](http://dx.doi.org/10.1103/PhysRevC.93.065805)
 
+## Obtaining this program
+The latest version of this code is available at [github.com/cgraeff/quarks_EOS](https://github.com/cgraeff/quarks_EOS).
+A copy can be easily obtained if your system have `git` installed, just issue the following
+command in a terminal:
+ ```
+   git clone https://github.com/cgraeff/quarks_EOS.git
+ ```
+
 ## Requisites
 
 To build and run this code `make`, a C compiler (default is `gcc`) and the
-GSL (GNU Scientific Library) must be installed on the system.
+GSL (GNU Scientific Library) must be installed on the system. For plotting
+graphics, `gnuplot` is also required.
 
 On Linux the installation varies from distribution to distribution, but generally
 there are two packages, one for regular use and one for developing.
@@ -44,13 +53,24 @@ For easier running and testing, the following commands are provided:
 * Remove product files with `make clean`;
 * Arguments may be passed with `make ARGS="-p Set" run`,
   where `-p Set` stand for example arguments;
+* Run for many parameters sets at once using `make multirun` or `make ARGS="-t 10" multirun`,
+where `-t 10` stands for example arguments. The sets must be listed in the `MULTIRUN_SETS`
+variable in the `Makefile` at the root dir;
 * Run tests with `make tests` (it is a shortcut to `make ARGS="-a" run` with
   the default parameterization);
 
-When running on the default tree (that is, on the cloned dir), the
+When running on the default tree (that is, on the cloned or downloade dir), the
 results can be plotted with
 * Plot results with `make graph`
+* Plot results for multirun with `make mgraph`. This also plots the `multioutput/gnuplot.gpi`
+which may access files for multiple parameters sets and is useful for making plots comparing
+results for different sets;
 * Plot tests with `make tgraph`;
+
+Two files for each plot will be created, a `png` file and a `tex` file. The second
+is a version created using the `tiks` terminal for `gnuplot` and can be used
+directly into `(pdf)latex`. The advantage is a much cleaner plot and proper
+`latex` equations and text in labels.
 
 ## Code structure
 
