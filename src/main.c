@@ -230,6 +230,15 @@ int SolveZeroTemperatureEOS(){
                       barionic_density_vector,
                       kinectic_energy_density_vector);
 
+    if (options.dirs)
+        SetFilePath("output/Rep_Tsue/data/");
+    
+    WriteVectorsToFile("pressure_chem_pot.dat",
+                       "# chemical potential, pressure\n",
+                       2,
+                       proton_chemical_potential_vector,
+                       pressure_vector);
+    
 	if (options.dirs)
         SetFilePath("output/EOS/data/");
         	   
