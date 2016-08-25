@@ -1,0 +1,8 @@
+set term png
+set xlabel '$\mu_p$ (MeV)'
+set ylabel '$p (\rm{MeV}/\rm{fm}^3)$'
+set out "graph/pressure_chem_pot.png"
+plot "data/pressure_chem_pot.dat" w l
+set term tikz size 14cm, 9cm
+set out "graph/pressure_chem_pot.tex"
+replot
