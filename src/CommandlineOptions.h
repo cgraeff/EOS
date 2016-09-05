@@ -17,6 +17,7 @@ typedef struct _options{
 	bool verbose;
     bool dirs;
   	bool tests;
+    bool stars;
   	bool list_available_parameterizations;
 	char * parameterization;
     double temp;

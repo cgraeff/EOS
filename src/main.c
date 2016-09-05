@@ -20,6 +20,8 @@
 #include "AuxiliaryFunctions.h"
 
 int SolveZeroTemperatureEOS();
+int SolveZeroTemperatureStarEOS();
+
 int SolveFiniteTemperatureEOS();
 
 int main(int argc, char * argv[])
@@ -43,6 +45,11 @@ int main(int argc, char * argv[])
         parameters.temperature = options.temp;
     
     if (parameters.temperature == 0){
+        if (options.stars){
+            SolveZeroTemperatureStarEOS();
+            return 0;
+        }
+        
         SolveZeroTemperatureEOS();
     }
     else if (parameters.temperature > 0){
@@ -294,6 +301,7 @@ int SolveZeroTemperatureStarEOS(){
     gsl_vector * barionic_density_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * scalar_density_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * mass_vector = gsl_vector_alloc(parameters.points_number);
+    gsl_vector * proton_fraction_vector = gsl_vector_alloc(parameters.points_number);
 
 	gsl_vector * proton_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * neutron_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
@@ -326,10 +334,15 @@ int SolveZeroTemperatureStarEOS(){
             fflush(stdout);
         }
 
-		double mass = SolveGapEquation(proton_density,
-                                       neutron_density,
-                                       proton_fermi_momentum,
-                                       neutron_fermi_momentum);
+        double mass;
+        double proton_fraction;
+        SolveMultiRoots(barionic_density, &mass, &proton_fraction);
+        
+        double proton_density = barionic_density * proton_fraction;
+        double neutron_density = barionic_density * (1.0 - proton_fraction);
+        
+        double proton_fermi_momentum = FermiMomentum(proton_density);
+        double neutron_fermi_momentum = FermiMomentum(barionic_density * (1.0 - proton_fraction));
 
 		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.CUTOFF)
 									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.CUTOFF);
@@ -337,6 +350,7 @@ int SolveZeroTemperatureStarEOS(){
 
         gsl_vector_set(scalar_density_vector, i , total_scalar_density);
         gsl_vector_set(mass_vector, i, mass);
+        gsl_vector_set(proton_fraction_vector, i, proton_fraction);
 
         double proton_chemical_potential =	ProtonChemicalPotential(proton_fermi_momentum,
 																	total_scalar_density,
@@ -440,6 +454,12 @@ int SolveZeroTemperatureStarEOS(){
                       2,
                       barionic_density_vector,
                       kinectic_energy_density_vector);
+    
+    WriteVectorsToFile("proton_fraction.dat",
+                       "# barionic density, proton fraction\n",
+                       2,
+                       barionic_density_vector,
+                       proton_fraction_vector);
 
     if (options.dirs)
         SetFilePath("output/Rep_Tsue/data/");

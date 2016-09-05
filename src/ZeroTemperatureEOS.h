@@ -58,4 +58,12 @@ double F0(double mass, double momentum);
 double F2(double mass, double momentum);
 double GapEquation(double mass, void * input);
 
+double FermiMomentum(double density);
+
+void SolveMultiRoots(double barionic_density, double * return_mass, double * return_proton_fraction);
+
+int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
+                                             void * p,
+                                             gsl_vector * return_values);
+
 #endif /* EOS_h */

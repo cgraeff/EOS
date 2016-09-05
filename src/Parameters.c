@@ -307,6 +307,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.parameters_set_identifier = "Template";
 
     p.nucleon_mass = 939.0; // (MeV)
+    p.electron_mass = 0.511; // (MeV)
 
 	p.minimum_density = 1.0E-5; // fm^-3
 	p.maximum_density = 1.4; // fm^-3
@@ -328,6 +329,12 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.bare_mass = 0.0;      // (MeV)
     
     p.temperature = 0.0; // (MeV)
+    
+    p.multiroot.guesses.mass = p.nucleon_mass;
+    p.multiroot.guesses.proton_fraction = 0.5;
+    p.multiroot.max_iterations = 1000;
+    p.multiroot.abs_error = 1E-7;
+    p.multiroot.rel_error = 1E-4;
     
   	return p;
 }

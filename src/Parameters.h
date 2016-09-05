@@ -9,6 +9,13 @@
 #ifndef Parameters_h
 #define Parameters_h
 
+//typedef struct _parameters_
+//{
+//    double mass;
+//    double proton_fraction;
+//    
+//} RootGuesses;
+
 typedef struct _parameters
 {
     char * parameters_set_identifier;
@@ -23,6 +30,7 @@ typedef struct _parameters
 
 	double CUTOFF;	// \Lambda (MeV)
 	double nucleon_mass; // (MeV)
+    double electron_mass; // (MeV)
     double bare_mass;
 
 	double minimum_density; // (fm^-3)
@@ -37,7 +45,18 @@ typedef struct _parameters
     
     double temperature;
 	
-
+    struct _multiroot{
+        int max_iterations;
+        
+        struct _guesses{
+            double mass;
+            double proton_fraction;
+        } guesses;
+        
+        double abs_error;
+        double rel_error;
+    } multiroot;
+    
 } Parameters;
 
 extern Parameters parameters;
