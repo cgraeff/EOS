@@ -14,12 +14,134 @@
 #include "Constants.h"
 #include "ZeroTemperatureEOS.h"
 
+typedef struct _multi_dim_root_params{
+    double barionic_density;
+} multi_dim_root_params;
+
+void SolveMultiRoots()
+{
+    multi_dim_root_params p;
+    p.barionic_density = barionic_density;
+
+    gsl_multiroot_function f;
+    f.f = &ZeroedGapAndBarionicDensityEquations;
+    f.n = dimension
+    f.params = (void *)&p;
+
+    gsl_vector * initial_guess = gsl_vector_alloc(dimension);
+
+    gsl_vector_set(initial_guess, 0, x_initial_guess);
+    gsl_vector_set(initial_guess, 1, y_initial_guess);
+
+    gsl_vector * solution;
+
+    MultiDimensionalRootFinder(&f,
+                               initial_guess,
+                               solution);
+
+    // The solver creates a vector, free it
+    // so memory don't leak
+    gsl_vector_free(solution);
+
+    *return_mass = x;
+    *return_renormalized_chemical_potential = y;
+}
+
+void MultiDimensionalRootFinder(int dimension
+                                gsl_multiroot_function * f,
+                                gsl_vector * initial_guess,
+                                gsl_vector * solution)
+{
+    int status;
+    size_t iter = 0;
+
+    const gsl_multiroot_fsolver_type * solver_type = gsl_multiroot_fsolver_hybrids;
+    gsl_multiroot_fsolver * solver = gsl_multiroot_fsolver_alloc(solver_type,
+                                                                 dimension);
+
+    gsl_multiroot_fsolver_set(solver, f, initial_guess);
+
+    do {
+        iter++;
+        status = gsl_multiroot_fsolver_iterate(solver);
+
+        if (status == GSL_EBADFUNC){
+            printf("TwodimensionalRootFinder: Error: Infinity or division by zero.\n");
+            abort();
+        }
+        else if (status == GSL_ENOPROG){
+            printf("TwodimensionalRootFinder: Error: Solver is stuck. Try a different initial guess.\n");
+            abort();
+        }
+
+        // Check if the root is good enough:
+        // tests for the convergence of the sequence by comparing the last step dx with the
+        // absolute error epsabs and relative error epsrel to the current position x. The test
+        // returns GSL_SUCCESS if the following condition is achieved,
+        //
+        // |dx_i| < epsabs + epsrel |x_i|
+
+        gsl_vector * x = gsl_multiroot_fsolver_root(solver); // current root
+        gsl_vector * dx = gsl_multiroot_fsolver_dx(solver); // last step
+
+        status = gsl_multiroot_test_delta(dx,
+                                          x,
+                                          parameters.mass_and_renorm_chem_pot_solution_abs_error,
+                                          parameters.mass_and_renorm_chem_pot_solution_rel_error);
+
+    } while (status == GSL_CONTINUE
+             && iter < parameters.mass_and_renor_chem_pot_solution_max_iter);
+
+    solution = gsl_multiroot_fsolver_root(solver);
+
+    gsl_multiroot_fsolver_free(solver);
+    gsl_vector_free (initial_guess);
+
+}
+
+int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
+                                             void * p,
+                                             gsl_vector * return_values)
+{
+    multi_dim_root_params * params = (multi_dim_root_params *)p;
+    double barionic_density = params->barionic_density;
+
+   	const double mass = gsl_vector_get(x, 0);
+    const double proton_fraction = gsl_vector(x, 1);
+
+    double proton_density = proton_fraction * barionic_density;
+    double neutron_density = (1.0 - proton_fraction) * barionic_density;
+    double electron_density = proton_density; // Ensures charge neutrality
+
+	double proton_fermi_momentum = CONST_HBAR_C * pow(3.0 * pow(M_PI, 2.0) * proton_density, 1.0 / 3.0);
+	double neutron_fermi_momentum = CONST_HBAR_C * pow(3.0 * pow(M_PI, 2.0) * neutron_density, 1.0 / 3.0);
+    double electron_fermi_momentum = CONST_HBAR_C * pow(3.0 * pow(M_PI, 2.0) * electron_density, 1.0 / 3.0);
+
+	gap_equation_input gap_params;
+    gap_params.proton_fermi_momentum = proton_fermi_momentum;
+    gap_params.neutron_fermi_momentum = neutron_fermi_momentum;
+    gap_params.proton_density;
+    gap_params.neutron_density;
+
+    double zeroed_gap_eq = GapEquation(double mass, &gap_params);
+    double zeroed_beta_equilibrium_rel = neutron_chemical_potential
+                                         - proton_chemical_potential
+                                         - electron_chemical_potential;
+    // Prepare return vector
+   	gsl_vector_set(return_values, 0, zeroed_gap_eq);
+   	gsl_vector_set(return_values, 1, zeroed_beta_equilibrium_rel);
+
+    return GSL_SUCCESS;
+}
+
+
 double SolveGapEquation(double proton_density,
                         double neutron_density,
                         double proton_fermi_momentum,
                         double neutron_fermi_momentum)
 {
-	const gsl_root_fsolver_type * T	= gsl_root_fsolver_bisection; // Maybe this would be better: gsl_root_fsolver_brent
+    // Maybe this would be better: gsl_root_fsolver_brent
+	const gsl_root_fsolver_type * T	= gsl_root_fsolver_bisection;
 
 	gsl_root_fsolver * s = gsl_root_fsolver_alloc(T);
 
@@ -58,7 +180,10 @@ double SolveGapEquation(double proton_density,
 		
 		x_lower = gsl_root_fsolver_x_lower(s);
 		x_upper = gsl_root_fsolver_x_upper(s);
-	} while(GSL_CONTINUE == gsl_root_test_interval(x_lower, x_upper, CONST_ABS_ERROR_GAP_EQ_SOLVING, CONST_REL_ERROR_GAP_EQ_SOLVING)
+	} while(GSL_CONTINUE == gsl_root_test_interval(x_lower,
+                                                   x_upper,
+                                                   CONST_ABS_ERROR_GAP_EQ_SOLVING,
+                                                   CONST_REL_ERROR_GAP_EQ_SOLVING)
 			&& i <= CONST_MAX_ITERATIONS_GAP_EQ_SOLVING);
 
 	double result = gsl_root_fsolver_root(s);
@@ -163,7 +288,9 @@ double VacuumEnergyDensity()
 {
     double scalar_density_0 = VacuumScalarDensity();
 
-	return VacuumKinecticEnergyDensity() + parameters.bare_mass * scalar_density_0 - parameters.G_S * pow(scalar_density_0, 2.0) * CONST_HBAR_C;
+	return VacuumKinecticEnergyDensity()
+           + parameters.bare_mass * scalar_density_0
+           - parameters.G_S * pow(scalar_density_0, 2.0) * CONST_HBAR_C;
 }
 
 double EnergyDensity(double pressure,
