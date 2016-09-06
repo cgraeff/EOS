@@ -36,11 +36,14 @@ int main(int argc, char * argv[])
 	// otherwise, use default set
   	SetParametersSet(options.parameterization);
     
-    // If the temperature was chosen using
-    // commandline options, use it
+    // If the temperature and/or proton fraction
+    // was chosen using commandline options, use it
     // (-1.0 is a place holder value)
     if (options.temp != -1.0)
         parameters.temperature = options.temp;
+    
+    if (options.proton_fraction != -1.0)
+        parameters.proton_fraction = options.proton_fraction;
     
     if (parameters.temperature == 0){
         SolveZeroTemperatureEOS();

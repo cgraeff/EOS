@@ -20,6 +20,7 @@ typedef struct _options{
   	bool list_available_parameterizations;
 	char * parameterization;
     double temp;
+    double proton_fraction;
 } Options;
 
 extern Options options;

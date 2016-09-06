@@ -16,7 +16,7 @@
 
 // Default values for options and flags that will be acessible
 // during the execution (specified in order of declaration).
-Options options = {true, false, false, false, NULL, -1.0};
+Options options = {true, false, false, false, NULL, -1.0, -1.0};
 
 int CommandlineOptionsParse(int argc, char * argv[])
 {
@@ -33,7 +33,7 @@ int CommandlineOptionsParse(int argc, char * argv[])
 	// the arguments after the first will be misinterpreted as unknown, or unclaimed.
 	// This particular implementation will stop if there are any unprocessed arguments.
 	
-	char * short_options = "p:t:lqdauh";
+	char * short_options = "p:t:lqday:uh";
 
 	int opt;
 	while ((opt = getopt(argc, argv, short_options)) != -1){
@@ -58,6 +58,9 @@ int CommandlineOptionsParse(int argc, char * argv[])
             case 'a':
                 options.dirs = true;
                 options.tests = true;
+                break;
+            case 'y':
+                options.proton_fraction = atof(optarg);
                 break;
 			case 'u':
 				CommandlineOptionsPrintUsage();
