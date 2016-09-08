@@ -39,14 +39,29 @@ void SolveMultiRoots(double barionic_density, double * return_mass, double * ret
     f.params = (void *)&p;
 
     gsl_vector * initial_guess = gsl_vector_alloc(dimension);
-
-    gsl_vector_set(initial_guess, 0, parameters.multiroot.guesses.mass);
-    gsl_vector_set(initial_guess, 1, parameters.multiroot.guesses.proton_fraction);
+    
+    // Mappings:
+    //      The variables for the root finding are assumed to cover the range
+    //      (-\infty, +\infty), but that is not the case for the variables
+    //      that we are trying to solve. Here the proton fraction $y_p$ is
+    //      such that
+    //          $y_p \in [0, 1]$
+    //      and the mass $m$ is such that
+    //          $m \in [0, +\infty)$.
+    //      To solve that, we use the mappings:
+    //          $m = x^2$
+    //      and
+    //          $y_p = \frac{\tanh(x / a) + 1}{2}$.
+    //      The initial guesses must be transformed by inverting the relations
+    //      above
+    gsl_vector_set(initial_guess, 0, sqrt(parameters.multiroot.guesses.mass));
+    gsl_vector_set(initial_guess, 1, parameters.multiroot.proton_fraction_mapping_scale
+                                     * atanh(2.0 * parameters.multiroot.guesses.proton_fraction - 1.0));
 
     int status;
     size_t iter = 0;
     
-    const gsl_multiroot_fsolver_type * solver_type = gsl_multiroot_fsolver_dnewton;
+    const gsl_multiroot_fsolver_type * solver_type = gsl_multiroot_fsolver_hybrids;
     gsl_multiroot_fsolver * solver = gsl_multiroot_fsolver_alloc(solver_type,
                                                                  dimension);
     
@@ -83,9 +98,10 @@ void SolveMultiRoots(double barionic_density, double * return_mass, double * ret
     } while (status == GSL_CONTINUE
              && iter < parameters.multiroot.max_iterations);
     
-    // Save results
-    *return_mass = gsl_vector_get(gsl_multiroot_fsolver_root(solver), 0);
-    *return_proton_fraction = gsl_vector_get(gsl_multiroot_fsolver_root(solver), 1);
+    // Save results in return variables
+    *return_mass = pow(gsl_vector_get(gsl_multiroot_fsolver_root(solver), 0), 2.0);;
+    *return_proton_fraction = (tanh(gsl_vector_get(gsl_multiroot_fsolver_root(solver), 1)
+                                    / parameters.multiroot.proton_fraction_mapping_scale) + 1.0) / 2.0;
     
     // Free vectors
     gsl_multiroot_fsolver_free(solver);
@@ -105,13 +121,30 @@ int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
     multi_dim_root_params * params = (multi_dim_root_params *)p;
     double barionic_density = params->barionic_density;
 
-   	const double mass = gsl_vector_get(x, 0);
-    const double proton_fraction = gsl_vector_get(x, 1);
-    printf("\nmass: %f\nproton fraction: %f\n", mass, proton_fraction);
-
+    // Mappings:
+    //      The variables for the root finding are assumed to cover the range
+    //      (-\infty, +\infty), but that is not the case for the variables
+    //      that we are trying to solve. Here the proton fraction $y_p$ is
+    //      such that
+    //          $y_p \in [0, 1]$
+    //      and the mass $m$ is such that
+    //          $m \in [0, +\infty)$.
+    //      To solve that, we use the mappings:
+    //          $m = x^2$
+    //      and
+    //          $y_p = \frac{\tanh(x / a) + 1}{2}$.
+    //      The initial guesses must be transformed by inverting the relations
+    //      above
+    
+   	const double mass = pow(gsl_vector_get(x, 0), 2.0);
+    const double proton_fraction = (tanh(gsl_vector_get(x, 1)
+                                         / parameters.multiroot.proton_fraction_mapping_scale) + 1) / 2.0;
+    
     double proton_density = proton_fraction * barionic_density;
     double neutron_density = (1.0 - proton_fraction) * barionic_density;
-    double electron_density = proton_density; // Ensures charge neutrality
+    
+    // Ensure charge neutrality
+    double electron_density = proton_density;
 
     double proton_fermi_momentum = FermiMomentum(proton_density);
 	double neutron_fermi_momentum = FermiMomentum(neutron_density);
@@ -147,12 +180,6 @@ int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
     double zeroed_beta_equilibrium_relation = neutron_chemical_potential
                                          - proton_chemical_potential
                                          - electron_chemical_potential;
-
-    printf("b: %f\n", zeroed_beta_equilibrium_relation);
-    printf("%f\n%f\n%f\n",
-           neutron_chemical_potential,
-           proton_chemical_potential,
-           electron_chemical_potential);
     
     // Prepare return vector
    	gsl_vector_set(return_values, 0, zeroed_gap_eq);
@@ -369,7 +396,17 @@ double F0(double mass, double momentum)
 {
 	double E = sqrt(pow(mass, 2.0) + pow(momentum, 2.0));
 	
-	return (1.0 / 2.0) * (momentum * E - pow(mass, 2.0) * log((momentum + E) / mass));
+    double first_term = momentum * E;
+    double second_term = - pow(mass, 2.0) * log(momentum + E);
+    double third_term = pow(mass, 2.0) * log(mass);
+    
+    // In the limit of mass -> 0, the logarithm may give a NaN,
+    // so when that happens, just make sure the third term
+    // have the correct value
+    if (third_term != third_term)
+        third_term = 0;
+    
+    return (1.0 / 2.0) * (first_term +second_term + third_term);
 }
 
 double F2(double mass, double momentum)

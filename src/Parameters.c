@@ -309,14 +309,14 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.nucleon_mass = 939.0; // (MeV)
     p.electron_mass = 0.511; // (MeV)
 
-	p.minimum_density = 1.0E-5; // fm^-3
+	p.minimum_density = 1.0E-3; // fm^-3
 	p.maximum_density = 1.4; // fm^-3
 
 	p.points_number = 1000;
 
 	p.proton_fraction = 0.5;
 		
-	p.lower_bound_gap_eq_solve = 1.0E-3; // Low, but not zero. In zero f(M) = 0;
+	p.lower_bound_gap_eq_solve = 1.0E-5; // Low, but not zero. In zero f(M) = 0;
 	p.upper_bound_gap_eq_solve = 3000.0;	// MeV (much bigger than expected maximum mass)
 	
 	p.G_S = 0;              // (fm)^2
@@ -331,10 +331,11 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.temperature = 0.0; // (MeV)
     
     p.multiroot.guesses.mass = p.nucleon_mass;
-    p.multiroot.guesses.proton_fraction = 0.5;
+    p.multiroot.guesses.proton_fraction = 0.0001;
     p.multiroot.max_iterations = 1000;
     p.multiroot.abs_error = 1E-7;
     p.multiroot.rel_error = 1E-4;
+    p.multiroot.proton_fraction_mapping_scale = 100;
     
   	return p;
 }

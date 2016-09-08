@@ -55,6 +55,9 @@ typedef struct _parameters
         
         double abs_error;
         double rel_error;
+        
+        double proton_fraction_mapping_scale;
+
     } multiroot;
     
 } Parameters;
