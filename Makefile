@@ -19,7 +19,7 @@ graph:
 	done
 multirun:
 	for key in $(MULTIRUN_SETS); do \
-		./$(TARGET) -d -p "$$key"; \
+		./$(TARGET) -d -p "$$key" $(ARGS); \
 		if [ -d multioutput/"$$key" ]; then rm -r multioutput/"$$key"; fi; \
 		cp -r output multioutput/"$$key"; \
 	done

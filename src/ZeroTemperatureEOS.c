@@ -20,6 +20,8 @@ typedef struct _multi_dim_root_params{
     double barionic_density;
 } multi_dim_root_params;
 
+double F_E(double mass, double momentum);
+
 int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
                                              void * p,
                                              gsl_vector * return_values);
@@ -108,8 +110,10 @@ void SolveMultiRoots(double barionic_density, double * return_mass, double * ret
     gsl_vector_free(initial_guess);
     
     // Save solution as guess for next iteration
-    parameters.multiroot.guesses.mass = *return_mass;
-    parameters.multiroot.guesses.proton_fraction = *return_proton_fraction;
+    if (parameters.multiroot.use_last_solution_as_guess == true){
+        parameters.multiroot.guesses.mass = *return_mass;
+        parameters.multiroot.guesses.proton_fraction = *return_proton_fraction;
+    }
 
     return;
 }
@@ -392,6 +396,16 @@ double TermodynamicPotential(double scalar_density,
 	return omega;
 }
 
+double ElectronPressure(double electron_fermi_momentum)
+{
+    return F2(parameters.electron_mass, electron_fermi_momentum) / (3.0 * pow(M_PI, 2.0) * pow(CONST_HBAR_C, 3.0));
+}
+
+double ElectronEnergyDensity(double electron_fermi_momentum)
+{
+    return F_E(parameters.electron_mass, electron_fermi_momentum) / (pow(M_PI, 2.0) * pow(CONST_HBAR_C, 3.0));
+}
+
 double F0(double mass, double momentum)
 {
 	double E = sqrt(pow(mass, 2.0) + pow(momentum, 2.0));
@@ -418,4 +432,17 @@ double F2(double mass, double momentum)
 				   
 	return (1.0 / 8.0) * (-3.0 * pow(mass, 2.0) * momentum + 2.0 * pow(momentum, 3.0)) * E
            + (3.0 / 8.0) * pow(mass, 4.0) * log((momentum + E) / mass);
+}
+
+double F_E(double mass, double momentum)
+{
+    if (mass == 0)
+        return pow(momentum, 4.0) / 4.0;
+    
+    double E = sqrt(pow(mass, 2.0) + pow(momentum, 2.0));
+    
+    return (momentum * pow(E, 3.0)
+            - 0.5 * pow(mass, 2.0) * momentum * E
+            - 0.5 * pow(mass, 4.0) * log ((momentum + E) / mass))
+    / 4.0;
 }

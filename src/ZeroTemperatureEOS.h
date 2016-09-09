@@ -54,6 +54,10 @@ double TermodynamicPotential(double scalar_density,
 
 double KinecticEnergyDensity(double mass, double proton_fermi_momentum, double neutron_fermi_momentum);
 
+double ElectronPressure(double electron_fermi_momentum);
+
+double ElectronEnergyDensity(double electron_fermi_momentum);
+
 double F0(double mass, double momentum);
 double F2(double mass, double momentum);
 double GapEquation(double mass, void * input);

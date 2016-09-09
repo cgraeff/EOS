@@ -9,12 +9,7 @@
 #ifndef Parameters_h
 #define Parameters_h
 
-//typedef struct _parameters_
-//{
-//    double mass;
-//    double proton_fraction;
-//    
-//} RootGuesses;
+#include <stdbool.h>
 
 typedef struct _parameters
 {
@@ -57,6 +52,7 @@ typedef struct _parameters
         double rel_error;
         
         double proton_fraction_mapping_scale;
+        bool use_last_solution_as_guess;
 
     } multiroot;
     

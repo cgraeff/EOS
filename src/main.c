@@ -310,6 +310,8 @@ int SolveZeroTemperatureStarEOS(){
 
 	gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * energy_density_vector = gsl_vector_alloc(parameters.points_number);
+    gsl_vector * electron_energy_density_vector = gsl_vector_alloc(parameters.points_number);
+    gsl_vector * electron_pressure_vector = gsl_vector_alloc(parameters.points_number);
 
     /*
      * Main loop (on barionic density)
@@ -341,8 +343,12 @@ int SolveZeroTemperatureStarEOS(){
         double proton_density = barionic_density * proton_fraction;
         double neutron_density = barionic_density * (1.0 - proton_fraction);
         
+        // Ensure charge neutrality
+        double electron_density = proton_density;
+        
         double proton_fermi_momentum = FermiMomentum(proton_density);
         double neutron_fermi_momentum = FermiMomentum(barionic_density * (1.0 - proton_fraction));
+        double electron_fermi_momentum = FermiMomentum(electron_density);
 
 		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.CUTOFF)
 									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.CUTOFF);
@@ -374,6 +380,8 @@ int SolveZeroTemperatureStarEOS(){
         gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
 
 
+        // BEWARE: The termodynamic potential don't have the
+        // electron contribution
 		double termodynamic_potential = TermodynamicPotential(total_scalar_density,
 															  barionic_density,
 															  proton_density,
@@ -384,15 +392,23 @@ int SolveZeroTemperatureStarEOS(){
 
 		gsl_vector_set(termodynamic_potential_vector, i, termodynamic_potential);
 
-		double pressure = Pressure(termodynamic_potential);
+        // Electron contributions to energy and pressure
+        double electron_pressure = ElectronPressure(electron_fermi_momentum);
+        double electron_energy_density = ElectronEnergyDensity(electron_fermi_momentum);
+        
+        gsl_vector_set(electron_pressure_vector, i, electron_pressure);
+        gsl_vector_set(electron_energy_density_vector, i, electron_energy_density);
+        
+		double pressure = electron_pressure + Pressure(termodynamic_potential);
 
 		gsl_vector_set(pressure_vector, i, pressure);
 
-		double energy_density = EnergyDensity(pressure,
-											  proton_chemical_potential,
-											  neutron_chemical_potential,
-											  proton_density,
-											  neutron_density);
+		double energy_density = electron_energy_density
+                                + EnergyDensity(pressure,
+                                                proton_chemical_potential,
+                                                neutron_chemical_potential,
+                                                proton_density,
+                                                neutron_density);
 
 		gsl_vector_set(energy_density_vector, i, energy_density);
 
@@ -460,6 +476,18 @@ int SolveZeroTemperatureStarEOS(){
                        2,
                        barionic_density_vector,
                        proton_fraction_vector);
+    
+    WriteVectorsToFile("electron_energy_density.dat",
+                       "# barionic density, electron energy density contribution\n",
+                       2,
+                       barionic_density_vector,
+                       electron_energy_density_vector);
+    
+    WriteVectorsToFile("electron_pressure.dat",
+                       "# barionic density, electron pressure contribution\n",
+                       2,
+                       barionic_density_vector,
+                       electron_pressure_vector);
 
     if (options.dirs)
         SetFilePath("output/Rep_Tsue/data/");
@@ -490,6 +518,13 @@ int SolveZeroTemperatureStarEOS(){
 					   "# barionic density, energy / barionic density\n",
 					   2,
 					   barionic_density_vector, energy_by_nucleon_vector);
+    
+    WriteVectorsToFile("rho_energy_pressure.dat",
+                       "# barionic density, energy density, pressure \n",
+                       3,
+                       barionic_density_vector,
+                       energy_density_vector,
+                       pressure_vector);
 
     /*
      * Clean up
