@@ -312,7 +312,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
 	p.minimum_density = 1.0E-3; // fm^-3
 	p.maximum_density = 10.0; // fm^-3
 
-	p.points_number = 1600;
+	p.points_number = 3000;
 
 	p.proton_fraction = 0.5;
 		
@@ -331,12 +331,16 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.temperature = 0.0; // (MeV)
     
     p.multiroot.guesses.mass = p.nucleon_mass;
-    p.multiroot.guesses.proton_fraction = 0.2;
+    p.multiroot.guesses.proton_fraction = 0.02;
     p.multiroot.max_iterations = 3000;
     p.multiroot.abs_error = 1E-7;
     p.multiroot.rel_error = 1E-4;
     p.multiroot.proton_fraction_mapping_scale = 100;
-    p.multiroot.use_last_solution_as_guess = false;
+    p.multiroot.use_last_solution_as_guess = true;
+    
+    p.multiroot.mass_tolerance = 0.1;
+    p.multiroot.special_case.lower_bound = 0.1; // The mapping with tanh(x) prevents
+    p.multiroot.special_case.upper_bound = 0.9; // the use of extremes of the proton fraction
     
   	return p;
 }

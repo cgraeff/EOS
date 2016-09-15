@@ -28,12 +28,65 @@ int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
 
 void SolveMultiRoots(double barionic_density, double * return_mass, double * return_proton_fraction)
 {
-    // Set dimension (number of equations|variables to solve|find)
-    const int dimension = 2;
     
     // Set up parameters to be passed to helper function
     multi_dim_root_params p;
     p.barionic_density = barionic_density;
+    
+    // Handle special case: mass near zero
+    //  When running using last solution as guess, we may
+    //  avoid the calculation of a two dimensional problem
+    //  when mass is (near) zero
+    if (parameters.multiroot.use_last_solution_as_guess == true){
+        if (parameters.multiroot.guesses.mass < parameters.multiroot.mass_tolerance){
+
+            const gsl_root_fsolver_type * T	= gsl_root_fsolver_bisection;
+            gsl_root_fsolver * s = gsl_root_fsolver_alloc(T);
+            
+            gsl_function F;
+            F.function = &GapEquation;
+            F.params = &p;
+            
+            double lower_bound = parameters.multiroot.proton_fraction_mapping_scale
+                                * atanh(2.0 * parameters.multiroot.special_case.lower_bound - 1.0);
+            double upper_bound = parameters.multiroot.proton_fraction_mapping_scale
+                                * atanh(2.0 * parameters.multiroot.special_case.upper_bound - 1.0);
+            
+            gsl_root_fsolver_set(s, &F, lower_bound, upper_bound);
+            
+            int i = 0;
+            double x_lower;
+            double x_upper;
+            do{
+                i++;
+                
+                int status = gsl_root_fsolver_iterate(s);
+                
+                if (status != GSL_SUCCESS){
+                    printf("ERROR: No solution to the gap equation was found!\n");
+                    exit(EXIT_FAILURE);
+                }
+                
+                x_lower = gsl_root_fsolver_x_lower(s);
+                x_upper = gsl_root_fsolver_x_upper(s);
+            } while(GSL_CONTINUE == gsl_root_test_interval(x_lower,
+                                                           x_upper,
+                                                           CONST_ABS_ERROR_GAP_EQ_SOLVING, // change this as we are reusing
+                                                           CONST_REL_ERROR_GAP_EQ_SOLVING) // error variables
+                    && i <= CONST_MAX_ITERATIONS_GAP_EQ_SOLVING); // this too
+            
+            double result = gsl_root_fsolver_root(s);
+            
+            void gsl_root_fsolver_free(gsl_root_fsolver * S);
+            
+            *return_mass = 0.0;
+            *return_proton_fraction = (tanh(result / parameters.multiroot.proton_fraction_mapping_scale) + 1.0) / 2.0;
+            return;
+        }
+    }
+    
+    // Set dimension (number of equations|variables to solve|find)
+    const int dimension = 2;
 
     gsl_multiroot_function f;
     f.f = &MultiDimensionalRootFinderHelperFunction;
@@ -116,6 +169,27 @@ void SolveMultiRoots(double barionic_density, double * return_mass, double * ret
     }
 
     return;
+}
+
+double SpecialCaseHelperFunction(double x, void * par)
+{
+    gsl_vector * input_values = gsl_vector_alloc(2);
+    gsl_vector * return_values = gsl_vector_alloc(2);
+    
+    // Set mass = 0, which is our special case
+    gsl_vector_set(input_values, 0, 0);
+    
+    // Pass value selected by the root finding routine
+    gsl_vector_set(input_values, 1, x);
+    
+    MultiDimensionalRootFinderHelperFunction(input_values, par, return_values);
+    
+    double return_value =gsl_vector_get(return_values, 1);
+    
+    gsl_vector_free(input_values);
+    gsl_vector_free(return_values);
+    
+    return return_value;
 }
 
 int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,

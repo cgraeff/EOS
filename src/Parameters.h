@@ -53,6 +53,12 @@ typedef struct _parameters
         
         double proton_fraction_mapping_scale;
         bool use_last_solution_as_guess;
+        
+        struct _special_case{
+            double lower_bound;
+            double upper_bound;
+        } special_case;
+        double mass_tolerance; // pass that to _special_case
 
     } multiroot;
     
