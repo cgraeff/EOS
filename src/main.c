@@ -38,12 +38,9 @@ int main(int argc, char * argv[])
 	// otherwise, use default set
   	SetParametersSet(options.parameterization);
     
-    // If the temperature was chosen using
-    // commandline options, use it
-    // (-1.0 is a place holder value)
-    if (options.temp != -1.0)
-        parameters.temperature = options.temp;
-    
+    // Set parameters overrides from commandline
+    SetParametersFromCommandline();
+
     if (parameters.temperature == 0){
         if (options.stars){
             SolveZeroTemperatureStarEOS();
@@ -127,13 +124,13 @@ int SolveZeroTemperatureEOS(){
                                        proton_fermi_momentum,
                                        neutron_fermi_momentum);
 
-		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.CUTOFF)
-									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.CUTOFF);
+		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.theory.cutoff)
+									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.theory.cutoff);
 
-		
+
         gsl_vector_set(scalar_density_vector, i , total_scalar_density);
         gsl_vector_set(mass_vector, i, mass);
-        
+
         double proton_chemical_potential =	ProtonChemicalPotential(proton_fermi_momentum,
 																	total_scalar_density,
 																	mass,
@@ -189,7 +186,7 @@ int SolveZeroTemperatureEOS(){
                                                                                         barionic_density_vector);
     
     for (int i = 0; i < energy_by_nucleon_vector->size; i++)
-        gsl_vector_set(energy_by_nucleon_vector, i, gsl_vector_get(energy_by_nucleon_vector, i) - parameters.nucleon_mass);
+        gsl_vector_set(energy_by_nucleon_vector, i, gsl_vector_get(energy_by_nucleon_vector, i) - parameters.theory.nucleon_mass);
     
     
     /*
@@ -350,8 +347,8 @@ int SolveZeroTemperatureStarEOS(){
         double neutron_fermi_momentum = FermiMomentum(barionic_density * (1.0 - proton_fraction));
         double electron_fermi_momentum = FermiMomentum(electron_density);
 
-		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.CUTOFF)
-									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.CUTOFF);
+		double total_scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.theory.cutoff)
+									  + ScalarDensity(mass, neutron_fermi_momentum, parameters.theory.cutoff);
 
 
         gsl_vector_set(scalar_density_vector, i , total_scalar_density);
@@ -423,7 +420,7 @@ int SolveZeroTemperatureStarEOS(){
                                                                                         barionic_density_vector);
 
     for (int i = 0; i < energy_by_nucleon_vector->size; i++)
-        gsl_vector_set(energy_by_nucleon_vector, i, gsl_vector_get(energy_by_nucleon_vector, i) - parameters.nucleon_mass);
+        gsl_vector_set(energy_by_nucleon_vector, i, gsl_vector_get(energy_by_nucleon_vector, i) - parameters.theory.nucleon_mass);
 
 
     /*

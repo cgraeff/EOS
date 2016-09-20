@@ -41,10 +41,12 @@ Running:
 * The following options are available:
  * `-p par`: uses `par` parameters set;
  * `-t val`: uses `val` for temperature value. Must be a `double` value;
+ * `-y val`: uses `val` for proton fraction. Must be a `double` value.
  * `-l`: list available parameters set;
  * `-q`: quiet (supress information written to standard out);
  * `-d`: write results using a dir structure;
  * `-a`: run tests. Automatically sets `-d`;
+ * `-s`: run with charge neutrality and beta equilibrium;
  * `-u`: prints usage;
  * `-h`: also prints usage;
 
@@ -58,6 +60,8 @@ where `-t 10` stands for example arguments. The sets must be listed in the `MULT
 variable in the `Makefile` at the root dir;
 * Run tests with `make tests` (it is a shortcut to `make ARGS="-a" run` with
   the default parameterization);
+* As a shorthand to `make ARGS="-s" run` or `make ARGS="-s" multirun`,
+  `make srun` and `make smultirun` may be used.
 
 When running on the default tree (that is, on the cloned or downloade dir), the
 results can be plotted with

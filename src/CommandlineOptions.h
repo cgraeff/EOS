@@ -14,13 +14,18 @@
 typedef struct _options{
 	// List options and flags that will be acessible
 	// during the execution
-	bool verbose;
-    bool dirs;
-  	bool tests;
-    bool stars;
-  	bool list_available_parameterizations;
-	char * parameterization;
-    double temp;
+	bool    verbose;
+    bool    dirs;
+  	bool    tests;
+    bool    stars;
+  	bool    list_available_parameterizations;
+	char   *parameterization;
+
+    bool    temperature_override;
+    bool    proton_fraction_override;
+
+    double  temperature;
+    double  proton_fraction;
 } Options;
 
 extern Options options;

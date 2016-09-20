@@ -48,14 +48,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 4.855;         // (fm)^2
-    p.G_V = 4.65;          // (fm)^2
-    p.G_SV = -6.583;       // (fm)^8
-    p.G_RHO = 0.5876;      // (fm)^2
-    p.G_VRHO = 0.0;        // (fm)^8
-    p.G_SRHO = 0.0;        // (fm)^8
-    p.CUTOFF = 388.189;    // (MeV)
-    p.bare_mass = 0.0;     // (MeV)
+    p.theory.G_S = 4.855;         // (fm)^2
+    p.theory.G_V = 4.65;          // (fm)^2
+    p.theory.G_SV = -6.583;       // (fm)^8
+    p.theory.G_RHO = 0.5876;      // (fm)^2
+    p.theory.G_VRHO = 0.0;        // (fm)^8
+    p.theory.G_SRHO = 0.0;        // (fm)^8
+    p.theory.cutoff = 388.189;    // (MeV)
+    p.theory.bare_mass = 0.0;     // (MeV)
 
   	AppendParametersSetToList(p);
     
@@ -66,14 +66,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1OmegaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 4.855;
-    p.G_V = 4.65;
-    p.G_SV = -6.583;
-    p.G_RHO = 0.5976;
-    p.G_VRHO = -1.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 388.189;
-    p.bare_mass = 0.0;
+    p.theory.G_S = 4.855;
+    p.theory.G_V = 4.65;
+    p.theory.G_SV = -6.583;
+    p.theory.G_RHO = 0.5976;
+    p.theory.G_VRHO = -1.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 388.189;
+    p.theory.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -84,14 +84,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1OmegaRho2";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       
-    p.G_S = 4.855;
-    p.G_V = 4.65;
-    p.G_SV = -6.583;
-    p.G_RHO = 0.6476;
-    p.G_VRHO = -6.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 388.189;
-    p.bare_mass = 0.0;
+    p.theory.G_S = 4.855;
+    p.theory.G_V = 4.65;
+    p.theory.G_SV = -6.583;
+    p.theory.G_RHO = 0.6476;
+    p.theory.G_VRHO = -6.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 388.189;
+    p.theory.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -102,14 +102,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 3.8;
-    p.G_V = 3.8;
-    p.G_SV = -4.228;
-    p.G_RHO = 0.6313;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 422.384;
-    p.bare_mass = 0.0;
+    p.theory.G_S = 3.8;
+    p.theory.G_V = 3.8;
+    p.theory.G_SV = -4.228;
+    p.theory.G_RHO = 0.6313;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 422.384;
+    p.theory.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -120,14 +120,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2OmegaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 3.8;
-    p.G_V = 3.8;
-    p.G_SV = -4.288;
-    p.G_RHO = 0.6413;
-    p.G_VRHO = -1.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 422.384;
-    p.bare_mass = 0.0;
+    p.theory.G_S = 3.8;
+    p.theory.G_V = 3.8;
+    p.theory.G_SV = -4.288;
+    p.theory.G_RHO = 0.6413;
+    p.theory.G_VRHO = -1.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 422.384;
+    p.theory.bare_mass = 0.0;
     
     AppendParametersSetToList(p);
     
@@ -138,14 +138,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL3";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 1.93;
-    p.G_V = 3.0;
-    p.G_SV = -1.8;
-    p.G_RHO = 0.65;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 534.815;
-    p.bare_mass = 0.0;
+    p.theory.G_S = 1.93;
+    p.theory.G_V = 3.0;
+    p.theory.G_SV = -1.8;
+    p.theory.G_RHO = 0.65;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 534.815;
+    p.theory.bare_mass = 0.0;
      
     AppendParametersSetToList(p);
     
@@ -156,14 +156,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL3SigmaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 1.93;
-    p.G_V = 3;
-    p.G_SV = -1.8;
-    p.G_RHO = 0.0269;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 0.5;
-    p.CUTOFF = 534.815;
-    p.bare_mass = 0.0;
+    p.theory.G_S = 1.93;
+    p.theory.G_V = 3;
+    p.theory.G_SV = -1.8;
+    p.theory.G_RHO = 0.0269;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 0.5;
+    p.theory.cutoff = 534.815;
+    p.theory.bare_mass = 0.0;
      
     AppendParametersSetToList(p);
     
@@ -174,14 +174,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1m";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 1.3833;
-    p.G_V = 1.781;
-    p.G_SV = -2.943;
-    p.G_RHO = 0.7;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 478.248;
-    p.bare_mass = 450.0;
+    p.theory.G_S = 1.3833;
+    p.theory.G_V = 1.781;
+    p.theory.G_SV = -2.943;
+    p.theory.G_RHO = 0.7;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 478.248;
+    p.theory.bare_mass = 450.0;
     
     AppendParametersSetToList(p);
     
@@ -192,14 +192,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL1mSigmaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 1.3833;
-    p.G_V = 1.781;
-    p.G_SV = -2.943;
-    p.G_RHO = 0.0739;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 1.0;
-    p.CUTOFF = 478.248;
-    p.bare_mass = 450.0;
+    p.theory.G_S = 1.3833;
+    p.theory.G_V = 1.781;
+    p.theory.G_SV = -2.943;
+    p.theory.G_RHO = 0.0739;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 1.0;
+    p.theory.cutoff = 478.248;
+    p.theory.bare_mass = 450.0;
     
     AppendParametersSetToList(p);
     
@@ -210,14 +210,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2m";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 1.078;
-    p.G_V = 1.955;
-    p.G_SV = -2.74;
-    p.G_RHO = 0.75;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 0.0;
-    p.CUTOFF = 502.466;
-    p.bare_mass = 500.0;
+    p.theory.G_S = 1.078;
+    p.theory.G_V = 1.955;
+    p.theory.G_SV = -2.74;
+    p.theory.G_RHO = 0.75;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 0.0;
+    p.theory.cutoff = 502.466;
+    p.theory.bare_mass = 500.0;
     
     AppendParametersSetToList(p);
     
@@ -228,14 +228,14 @@ void ParametersSetup(void)
     p.parameters_set_identifier = "eNJL2mSigmaRho1";
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
-    p.G_S = 1.078;
-    p.G_V = 1.955;
-    p.G_SV = -2.74;
-    p.G_RHO = 0.1114;
-    p.G_VRHO = 0.0;
-    p.G_SRHO = 1.0;
-    p.CUTOFF = 502.466;
-    p.bare_mass = 500.0;
+    p.theory.G_S = 1.078;
+    p.theory.G_V = 1.955;
+    p.theory.G_SV = -2.74;
+    p.theory.G_RHO = 0.1114;
+    p.theory.G_VRHO = 0.0;
+    p.theory.G_SRHO = 1.0;
+    p.theory.cutoff = 502.466;
+    p.theory.bare_mass = 500.0;
     
     AppendParametersSetToList(p);
     
@@ -306,39 +306,42 @@ Parameters NewCopyOfParametersSetFromTemplate()
   	p.parameters_set_origin = "A standard parameters set. With no theory parameters.";
     p.parameters_set_identifier = "Template";
 
-    p.nucleon_mass = 939.0; // (MeV)
-    p.electron_mass = 0.511; // (MeV)
-
 	p.minimum_density = 1.0E-3; // fm^-3
 	p.maximum_density = 10.0; // fm^-3
 
 	p.points_number = 3000;
-
-	p.proton_fraction = 0.5;
-		
-	p.lower_bound_gap_eq_solve = 1.0E-5; // Low, but not zero. In zero f(M) = 0;
-	p.upper_bound_gap_eq_solve = 3000.0;	// MeV (much bigger than expected maximum mass)
 	
-	p.G_S = 0;              // (fm)^2
-    p.G_V = 0;              // (fm)^2
-    p.G_SV = 0;             // (fm)^8
-    p.G_RHO = 0;            // (fm)^2
-    p.G_VRHO = 0.0;         // (fm)^8
-    p.G_SRHO = 0.0;         // (fm)^8
-    p.CUTOFF = 0.0;           // (MeV)
-    p.bare_mass = 0.0;      // (MeV)
-    
-    p.temperature = 0.0; // (MeV)
-    
-    p.multiroot.guesses.mass = p.nucleon_mass;
-    p.multiroot.guesses.proton_fraction = 0.02;
+    p.temperature = 0.0;		// (MeV)
+	p.proton_fraction = 0.5;	// (no dimension)
+
+	p.gap_equation_solver.max_iterations = 1000;
+	p.gap_equation_solver.lower_bound = 1.0E-5; // Low, but not zero. In zero f(M) = 0;
+	p.gap_equation_solver.upper_bound = 3000.0;	// MeV (much bigger than expected maximum mass)
+	p.gap_equation_solver.abs_error = 1E-3;
+	p.gap_equation_solver.rel_error = 1E-2;
+
+	p.theory.G_S = 0;              // (fm)^2
+    p.theory.G_V = 0;              // (fm)^2
+    p.theory.G_SV = 0;             // (fm)^8
+    p.theory.G_RHO = 0;            // (fm)^2
+    p.theory.G_VRHO = 0.0;         // (fm)^8
+    p.theory.G_SRHO = 0.0;         // (fm)^8
+    p.theory.cutoff = 0.0;         // (MeV)
+    p.theory.nucleon_mass = 939.0; // (MeV)
+    p.theory.electron_mass = 0.511;// (MeV)
+    p.theory.bare_mass = 0.0;      // (MeV)
+
     p.multiroot.max_iterations = 3000;
-    p.multiroot.abs_error = 1E-7;
-    p.multiroot.rel_error = 1E-4;
     p.multiroot.proton_fraction_mapping_scale = 100;
     p.multiroot.use_last_solution_as_guess = true;
+
+    p.multiroot.abs_error = 1E-7;
+    p.multiroot.rel_error = 1E-4;
     
-    p.multiroot.mass_tolerance = 0.1;
+    p.multiroot.guesses.mass = p.theory.nucleon_mass;
+    p.multiroot.guesses.proton_fraction = 0.02;
+
+    p.multiroot.special_case.mass_tolerance = 0.1;
     p.multiroot.special_case.lower_bound = 0.1; // The mapping with tanh(x) prevents
     p.multiroot.special_case.upper_bound = 0.9; // the use of extremes of the proton fraction
     
@@ -354,13 +357,36 @@ void AppendParametersSetToList(Parameters a_set)
     return;
 }
 
+void SetParametersFromCommandline()
+{
+    if (options.temperature_override){
+        if (options.temperature < 0){
+            printf("Temperature must be a non-negative value (%f was provided).\n",
+                   options.temperature);
+            exit(EXIT_FAILURE);
+        }
+
+        parameters.temperature = options.temperature;
+    }
+
+    if (options.proton_fraction_override){
+        if (options.proton_fraction < 0.0 || options.proton_fraction > 1.0){
+            printf("The proton fraction must lie in the [0,1] range (%f was provided).\n",
+                   options.proton_fraction);
+            exit(EXIT_FAILURE);
+        }
+
+        parameters.proton_fraction = options.proton_fraction;
+    }
+}
+
 void PrintParametersToFile(FILE * file)
 {
     fprintf(file, "\n--- PARAMETERS ---\n");
     fprintf(file, "parameters_set_origin = %s\n", parameters.parameters_set_origin);
     fprintf(file, "parameters_set_identifier = %s\n\n", parameters.parameters_set_identifier);
     
-    fprintf(file, "nucleon_mass = %f\n", parameters.nucleon_mass);
+    fprintf(file, "nucleon_mass = %f\n", parameters.theory.nucleon_mass);
 
 	fprintf(file, "minimum_density = %f\n", parameters.minimum_density);
 	fprintf(file, "maximum_density = %f\n", parameters.maximum_density);
@@ -369,17 +395,14 @@ void PrintParametersToFile(FILE * file)
 
 	fprintf(file, "proton_fraction = %f\n", parameters.proton_fraction);
 	
-	fprintf(file, "lower_bound_gap_eq_solve = %f\n", parameters.lower_bound_gap_eq_solve);
-	fprintf(file, "upper_bound_gap_eq_solve = %f\n", parameters.upper_bound_gap_eq_solve);
-	
-	fprintf(file, "G_S = %f\n", parameters.G_S);
-    fprintf(file, "G_V = %f\n", parameters.G_V);
-    fprintf(file, "G_SV = %f\n", parameters.G_SV);
-    fprintf(file, "G_RHO = %f\n", parameters.G_RHO);
-    fprintf(file, "G_VRHO = %f\n", parameters.G_VRHO);
-    fprintf(file, "G_SRHO = %f\n", parameters.G_SRHO);
-    fprintf(file, "CUTOFF = %f\n", parameters.CUTOFF);
-    fprintf(file, "bare_mass = %f\n", parameters.bare_mass);
+	fprintf(file, "G_S = %f\n", parameters.theory.G_S);
+    fprintf(file, "G_V = %f\n", parameters.theory.G_V);
+    fprintf(file, "G_SV = %f\n", parameters.theory.G_SV);
+    fprintf(file, "G_RHO = %f\n", parameters.theory.G_RHO);
+    fprintf(file, "G_VRHO = %f\n", parameters.theory.G_VRHO);
+    fprintf(file, "G_SRHO = %f\n", parameters.theory.G_SRHO);
+    fprintf(file, "CUTOFF = %f\n", parameters.theory.cutoff);
+    fprintf(file, "bare_mass = %f\n", parameters.theory.bare_mass);
     fprintf(file, "temperature = %fzn", parameters.temperature);
     
     return;

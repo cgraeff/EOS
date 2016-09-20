@@ -19,13 +19,13 @@ OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 
 %.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) -Wall $(LIB_DIR) $(LIBS) -o $@
-	mv $(TARGET) ..
+	@$(CC) $(OBJECTS) -Wall $(LIB_DIR) $(LIBS) -o $@
+	@mv $(TARGET) ..
 
 clean:
-	-rm -f *.o
+	@-rm -f *.o
