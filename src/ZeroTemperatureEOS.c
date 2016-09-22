@@ -30,44 +30,59 @@ int MultiDimensionalRootFinderHelperFunction(const gsl_vector *x,
 double ZeroMassSpecialCaseHelperFunction(double x,
                                          void  *par);
 
-    // Mappings:
-    //      The variables for the root finding are assumed to cover the range
-    //      (-\infty, +\infty), but that is not the case for the variables
-    //      that we are trying to solve. Here the proton fraction $y_p$ is
-    //      such that
-    //          $y_p \in [0, 1]$
-    //      and the mass $m$ is such that
-    //          $m \in [0, +\infty)$.
-    //      To solve that, we use the mappings:
-    //          $m = x^2$
-    //      and
-    //          $y_p = \frac{\tanh(x / a) + 1}{2}$.
-    //      The initial guesses must be transformed by inverting the relations
-    //      above
-    // Handle special case: Zero mass case
-    //  The zero mass case is important as most calculations will be
-    //  performed at this particular case, which due to characteristics
-    //  of the multidimensional root-finding algorithm, may be problematic to
-    //  solve (it works most of the time, but sometimes calculations result in NaNs).
-    //  This is due to problems in the calculation of derivatives of
-    //  the function with respect to mass which arise from low variability
-    //  of the function near zero mass.
-    //
-    //  This case, however is not the one reached at the start of calculations.
-    //  In addition to that, once it is reached, all subsequent calculations are
-    //  performed at approximatelly zero mass.
-    //
-    //  We take these characteristics into account and do the zero mass case
-    //  with a special path, where we just assume mass = 0 (this effectivelly
-    //  reduces the dimension of the system). This will avoid
-    //  any calculation of potentially problematic derivatives. The special
-    //  path is triggered by the condition
-    //      parameters.multiroot.guesses.mass < parameters.multiroot.mass_tolerance
-    //  which must be true. The tolerance should be adusted in the setup of
-    //  parameters.
-void SolveMultiRoots(double barionic_density,
-double * return_mass,
-double * return_proton_fraction)
+/*  Solution for gap equation, beta equilibrium and charge neutrality:
+ *  Prototype:
+ *          void SolveMultiRoots(double  barionic_density,
+ *                              double *return_mass,
+ *                              double *return_proton_fraction);
+ *
+ *  Purpose:
+ *      This function will take parameters like initial guess, erros, tolerance
+ *      and call the rootfinding functions in a proper way. It exists to handle
+ *      mappings (see below) and to handle the special case of mass = 0 (also
+ *      below). It will return the mass which solves the gap function and the
+ *      proton fraction for which the beta equilibrium is respected.
+ *
+ *  Mappings:
+ *      The variables for the root finding are assumed to cover the range
+ *      (-\infty, +\infty), but that is not the case for the variables
+ *      that we are trying to solve. Here the proton fraction $y_p$ is
+ *      such that
+ *          $y_p \in [0, 1]$
+ *      and the mass $m$ is such that
+ *          $m \in [0, +\infty)$.
+ *      To solve that, we use the mappings:
+ *          $m = x^2$
+ *      and
+ *          $y_p = \frac{\tanh(x / a) + 1}{2}$.
+ *      The initial guesses must be transformed by inverting the relations
+ *      above
+ *
+ *  Zero mass special case:
+ *      The zero mass case is important as most calculations will be
+ *      performed at this particular case, which due to characteristics
+ *      of the multidimensional root-finding algorithm, may be problematic to
+ *      solve (it works most of the time, but sometimes calculations result in NaNs).
+ *      This is due to problems in the calculation of derivatives of
+ *      the function with respect to mass which arise from low variability
+ *      of the function near zero mass.
+ *
+ *      This case, however is not the one reached at the start of calculations.
+ *      In addition to that, once it is reached, all subsequent calculations are
+ *      performed at approximatelly zero mass.
+ *
+ *      We take these characteristics into account and do the zero mass case
+ *      with a special path, where we just assume mass = 0 (this effectivelly
+ *      reduces the dimension of the system). This will avoid
+ *      any calculation of potentially problematic derivatives. The special
+ *      path is triggered by the condition
+ *          parameters.multiroot.guesses.mass < parameters.multiroot.mass_tolerance
+ *      which must be true. The tolerance should be adusted in the setup of
+ *      parameters.
+ */
+void SolveMultiRoots(double  barionic_density,
+                     double *return_mass,
+                     double *return_proton_fraction)
 {
     // Set dimension (number of equations|variables to solve|find)
     const int dimension = 2;
@@ -164,7 +179,8 @@ double * return_proton_fraction)
     }
 }
 
-double ZeroMassSpecialCaseHelperFunction(double x, void * par)
+double ZeroMassSpecialCaseHelperFunction(double  x,
+                                         void   *par)
 {
     const int dimension = 2;
 
@@ -187,9 +203,9 @@ double ZeroMassSpecialCaseHelperFunction(double x, void * par)
     return return_value;
 }
 
-int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
-                                             void * p,
-                                             gsl_vector * return_values)
+int MultiDimensionalRootFinderHelperFunction(const gsl_vector   *x,
+                                             void               *p,
+                                             gsl_vector         *return_values)
 {
     multi_dim_root_params * params = (multi_dim_root_params *)p;
     double barionic_density = params->barionic_density;
@@ -301,7 +317,8 @@ double SolveGapEquation(double proton_density,
 	return return_result;
 }
 
-double GapEquation(double mass, void * input)
+double GapEquation(double    mass,
+                   void     *input)
 {
 	gap_equation_input * param = (gap_equation_input *)input;
 
@@ -318,7 +335,9 @@ double GapEquation(double mass, void * input)
 	return mass + gap_1st_term + gap_2nd_term + gap_3rd_term - parameters.theory.bare_mass;
 }
 
-double ScalarDensity(double mass, double fermi_momentum, double cutoff)
+double ScalarDensity(double mass,
+                     double fermi_momentum,
+                     double cutoff)
 {
     if (mass == 0.0){
         return 0.0;
@@ -453,7 +472,8 @@ double ElectronEnergyDensity(double electron_fermi_momentum)
     return F_E(parameters.theory.electron_mass, electron_fermi_momentum) / (pow(M_PI, 2.0) * pow(CONST_HBAR_C, 3.0));
 }
 
-double F0(double mass, double momentum)
+double F0(double mass,
+          double momentum)
 {
 	double E = sqrt(pow(mass, 2.0) + pow(momentum, 2.0));
 	
@@ -470,7 +490,8 @@ double F0(double mass, double momentum)
     return (1.0 / 2.0) * (first_term +second_term + third_term);
 }
 
-double F2(double mass, double momentum)
+double F2(double mass,
+          double momentum)
 {
     if (mass == 0.0){
         return pow(momentum, 4.0) / 4.0;
@@ -482,7 +503,8 @@ double F2(double mass, double momentum)
            + (3.0 / 8.0) * pow(mass, 4.0) * log((momentum + E) / mass);
 }
 
-double F_E(double mass, double momentum)
+double F_E(double mass,
+           double momentum)
 {
     if (mass == 0)
         return pow(momentum, 4.0) / 4.0;
