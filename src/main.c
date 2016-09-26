@@ -81,7 +81,7 @@ int SolveZeroTemperatureEOS(){
 	gsl_vector * proton_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * neutron_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * kinectic_energy_density_vector = gsl_vector_alloc(parameters.points_number);
-	gsl_vector * termodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
+	gsl_vector * thermodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
 	
 	gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * energy_density_vector = gsl_vector_alloc(parameters.points_number);
@@ -153,17 +153,17 @@ int SolveZeroTemperatureEOS(){
         gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
 
 		
-		double termodynamic_potential = TermodynamicPotential(total_scalar_density,
-															  barionic_density,
-															  proton_density,
-															  neutron_density,
-															  proton_chemical_potential,
-															  neutron_chemical_potential,
-															  kinectic_energy_density);
+		double thermodynamic_potential = ThermodynamicPotential(total_scalar_density,
+                                                                barionic_density,
+                                                                proton_density,
+                                                                neutron_density,
+                                                                proton_chemical_potential,
+                                                                neutron_chemical_potential,
+                                                                kinectic_energy_density);
 		
-		gsl_vector_set(termodynamic_potential_vector, i, termodynamic_potential);
+		gsl_vector_set(thermodynamic_potential_vector, i, thermodynamic_potential);
 		
-		double pressure = Pressure(termodynamic_potential);
+		double pressure = Pressure(thermodynamic_potential);
 		
 		gsl_vector_set(pressure_vector, i, pressure);
 		
@@ -200,36 +200,36 @@ int SolveZeroTemperatureEOS(){
         SetFilePath("output/IR/data/");
 
     WriteVectorsToFile("mass.dat",
-					   "# barionic density, mass\n",
+					   "# barionic density (fm^{-3}), mass (MeV)\n",
 					   2,
 					   barionic_density_vector,
 					   mass_vector);
 
 	WriteVectorsToFile("scalar_density.dat",
-					   "# barionic density, scalar density\n",
+					   "# barionic density (fm^{-3}), scalar density (fm^{-3})\n",
 					   2,
 					   barionic_density_vector,
 					   scalar_density_vector);
 
 	WriteVectorsToFile("thermodynamic_potential.dat",
-					   "# density, grand canonical potential per unit volume\n",
+					   "# density (fm^{-3}), grand canonical potential per unit volume (MeV/fm^{3})\n",
 					   2,
-					   barionic_density_vector, termodynamic_potential_vector);
+					   barionic_density_vector, thermodynamic_potential_vector);
 
 	WriteVectorsToFile("proton_chemical_potential.dat",
-					   "# barionic dentisy, proton chemical potential\n",
+					   "# barionic density (fm^{-3}), proton chemical potential (MeV)\n",
 					   2,
 					   barionic_density_vector,
 					   proton_chemical_potential_vector);
 
     WriteVectorsToFile("neutron_chemical_potential.dat",
-                       "# barionic dentisy, neutron chemical potential\n",
+                       "# barionic density (fm^{-3}), neutron chemical potential (MeV)\n",
                        2,
                        barionic_density_vector,
                        neutron_chemical_potential_vector);
     
     WriteVectorsToFile("kinectic_energy_density.dat",
-                      "# barionic density, kinectic energy density\n",
+                      "# barionic density (fm^{-3}), kinectic energy density (MeV)\n",
                       2,
                       barionic_density_vector,
                       kinectic_energy_density_vector);
@@ -238,7 +238,7 @@ int SolveZeroTemperatureEOS(){
         SetFilePath("output/Rep_Tsue/data/");
     
     WriteVectorsToFile("pressure_chem_pot.dat",
-                       "# chemical potential, pressure\n",
+                       "# chemical potential (MeV), pressure (MeV/fm^{3})\n",
                        2,
                        proton_chemical_potential_vector,
                        pressure_vector);
@@ -247,20 +247,20 @@ int SolveZeroTemperatureEOS(){
         SetFilePath("output/EOS/data/");
         	   
 	WriteVectorsToFile("pressure.dat",
-					   "# barionic density, pressure\n",
+					   "# barionic density (fm^{-3}), pressure (MeV/fm^{3})\n",
 					   2,
 					   barionic_density_vector,
 					   pressure_vector);
 
 	WriteVectorsToFile("energy_density.dat",
-					   "# barionic density, energy per unit volume\n",
+					   "# barionic density (fm^{-3}), energy per unit volume (MeV/fm^{3})\n",
 					   2,
 					   barionic_density_vector,
 					   energy_density_vector);
 
 	WriteVectorsToFile("energy_density_per_particle.dat",
-					   "# energy / barionic density = energy by nucleon \n"
-					   "# barionic density, energy / barionic density\n",
+					   "# energy density / barionic density = energy by nucleon \n"
+					   "# barionic density (fm^{-3}), energy / barionic density  (MeV)\n",
 					   2,
 					   barionic_density_vector, energy_by_nucleon_vector);
 
@@ -276,7 +276,7 @@ int SolveZeroTemperatureEOS(){
     
     gsl_vector_free(proton_chemical_potential_vector);
     gsl_vector_free(neutron_chemical_potential_vector);
-    gsl_vector_free(termodynamic_potential_vector);
+    gsl_vector_free(thermodynamic_potential_vector);
 
     gsl_vector_free(pressure_vector);
     gsl_vector_free(energy_density_vector);
@@ -303,7 +303,7 @@ int SolveZeroTemperatureStarEOS(){
 	gsl_vector * proton_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * neutron_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * kinectic_energy_density_vector = gsl_vector_alloc(parameters.points_number);
-	gsl_vector * termodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
+	gsl_vector * thermodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
 
 	gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * energy_density_vector = gsl_vector_alloc(parameters.points_number);
@@ -377,17 +377,17 @@ int SolveZeroTemperatureStarEOS(){
         gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
 
 
-        // BEWARE: The termodynamic potential don't have the
+        // BEWARE: The thermodynamic potential don't have the
         // electron contribution
-		double termodynamic_potential = TermodynamicPotential(total_scalar_density,
-															  barionic_density,
-															  proton_density,
-															  neutron_density,
-															  proton_chemical_potential,
-															  neutron_chemical_potential,
-															  kinectic_energy_density);
+		double thermodynamic_potential = ThermodynamicPotential(total_scalar_density,
+                                                                barionic_density,
+                                                                proton_density,
+                                                                neutron_density,
+                                                                proton_chemical_potential,
+                                                                neutron_chemical_potential,
+                                                                kinectic_energy_density);
 
-		gsl_vector_set(termodynamic_potential_vector, i, termodynamic_potential);
+		gsl_vector_set(thermodynamic_potential_vector, i, thermodynamic_potential);
 
         // Electron contributions to energy and pressure
         double electron_pressure = ElectronPressure(electron_fermi_momentum);
@@ -396,7 +396,7 @@ int SolveZeroTemperatureStarEOS(){
         gsl_vector_set(electron_pressure_vector, i, electron_pressure);
         gsl_vector_set(electron_energy_density_vector, i, electron_energy_density);
         
-		double pressure = electron_pressure + Pressure(termodynamic_potential);
+		double pressure = electron_pressure + Pressure(thermodynamic_potential);
 
 		gsl_vector_set(pressure_vector, i, pressure);
 
@@ -434,54 +434,55 @@ int SolveZeroTemperatureStarEOS(){
         SetFilePath("output/IR/data/");
 
     WriteVectorsToFile("mass.dat",
-					   "# barionic density, mass\n",
+					   "# barionic density (fm^{-3}), mass (MeV)\n",
 					   2,
 					   barionic_density_vector,
 					   mass_vector);
 
 	WriteVectorsToFile("scalar_density.dat",
-					   "# barionic density, scalar density\n",
+					   "# barionic density (fm^{-3}), scalar density (fm^{-3})\n",
 					   2,
 					   barionic_density_vector,
 					   scalar_density_vector);
 
 	WriteVectorsToFile("thermodynamic_potential.dat",
-					   "# density, grand canonical potential per unit volume\n",
+					   "# barionic density (fm^{-3}), grand canonical potential per unit volume (MeV/fm^{3})\n",
 					   2,
-					   barionic_density_vector, termodynamic_potential_vector);
+					   barionic_density_vector,
+                       thermodynamic_potential_vector);
 
 	WriteVectorsToFile("proton_chemical_potential.dat",
-					   "# barionic dentisy, proton chemical potential\n",
+					   "# barionic density (fm^{-3}), proton chemical potential (MeV)\n",
 					   2,
 					   barionic_density_vector,
 					   proton_chemical_potential_vector);
 
     WriteVectorsToFile("neutron_chemical_potential.dat",
-                       "# barionic dentisy, neutron chemical potential\n",
+                       "# barionic density (fm^{-3}), neutron chemical potential (MeV)\n",
                        2,
                        barionic_density_vector,
                        neutron_chemical_potential_vector);
 
     WriteVectorsToFile("kinectic_energy_density.dat",
-                      "# barionic density, kinectic energy density\n",
+                      "# barionic density (fm^{-3}), kinectic energy density (MeV/fm^{3})\n",
                       2,
                       barionic_density_vector,
                       kinectic_energy_density_vector);
     
     WriteVectorsToFile("proton_fraction.dat",
-                       "# barionic density, proton fraction\n",
+                       "# barionic density (fm^{-3}), proton fraction\n",
                        2,
                        barionic_density_vector,
                        proton_fraction_vector);
     
     WriteVectorsToFile("electron_energy_density.dat",
-                       "# barionic density, electron energy density contribution\n",
+                       "# barionic density (fm^{-3}), electron energy density contribution (MeV/fm^{3})\n",
                        2,
                        barionic_density_vector,
                        electron_energy_density_vector);
     
     WriteVectorsToFile("electron_pressure.dat",
-                       "# barionic density, electron pressure contribution\n",
+                       "# barionic density (fm^{-3}), electron pressure contribution (MeV/fm^{3})\n",
                        2,
                        barionic_density_vector,
                        electron_pressure_vector);
@@ -490,7 +491,7 @@ int SolveZeroTemperatureStarEOS(){
         SetFilePath("output/Rep_Tsue/data/");
 
     WriteVectorsToFile("pressure_chem_pot.dat",
-                       "# chemical potential, pressure\n",
+                       "# chemical potential (MeV), pressure (MeV/fm^{3})\n",
                        2,
                        proton_chemical_potential_vector,
                        pressure_vector);
@@ -499,25 +500,25 @@ int SolveZeroTemperatureStarEOS(){
         SetFilePath("output/EOS/data/");
 
 	WriteVectorsToFile("pressure.dat",
-					   "# barionic density, pressure\n",
+					   "# barionic density (fm^{-3}), pressure (MeV/fm^{3})\n",
 					   2,
 					   barionic_density_vector,
 					   pressure_vector);
 
 	WriteVectorsToFile("energy_density.dat",
-					   "# barionic density, energy per unit volume\n",
+					   "# barionic density (fm^{-3}), energy per unit volume (MeV/fm^{3})\n",
 					   2,
 					   barionic_density_vector,
 					   energy_density_vector);
 
 	WriteVectorsToFile("energy_density_per_particle.dat",
-					   "# energy / barionic density = energy by nucleon \n"
-					   "# barionic density, energy / barionic density\n",
+					   "# energy density / barionic density = energy by nucleon \n"
+					   "# barionic density (fm^{-3}), energy / barionic density (MeV)\n",
 					   2,
 					   barionic_density_vector, energy_by_nucleon_vector);
     
     WriteVectorsToFile("rho_energy_pressure.dat",
-                       "# barionic density, energy density, pressure \n",
+                       "# barionic density (fm^{-3}), energy density (MeV/fm^{3}), pressure (MeV/fm^{3})\n",
                        3,
                        barionic_density_vector,
                        energy_density_vector,
@@ -535,7 +536,7 @@ int SolveZeroTemperatureStarEOS(){
 
     gsl_vector_free(proton_chemical_potential_vector);
     gsl_vector_free(neutron_chemical_potential_vector);
-    gsl_vector_free(termodynamic_potential_vector);
+    gsl_vector_free(thermodynamic_potential_vector);
 
     gsl_vector_free(pressure_vector);
     gsl_vector_free(energy_density_vector);

@@ -15,15 +15,28 @@
 
 #include <gsl/gsl_vector.h>
 
-int WriteVectorsToFile(const char * filename, const char * header, int vectors_count, ...);
-int WriteVectorsToFileUpToIndex(const char * filename, const char * header, int vector_index, int vectors_count, ...);
-int WriteIndexedVectorsToFile(const char * filename, const char * header, int vectors_count, ...);
+int WriteVectorsToFile(const char *filename,
+                       const char *header,
+                       int         vectors_count,
+                       ...);
 
-gsl_vector * VectorNewVectorFromDivisionElementByElement(gsl_vector * numerator, gsl_vector * denominator);
+int WriteVectorsToFileUpToIndex(const char *filename,
+                                const char *header,
+                                int         vector_index,
+                                int         vectors_count,
+                                ...);
+
+int WriteIndexedVectorsToFile(const char *filename,
+                              const char *header,
+                              int         vectors_count,
+                              ...);
+
+gsl_vector * VectorNewVectorFromDivisionElementByElement(gsl_vector *numerator,
+                                                         gsl_vector *denominator);
 
 // Simple functions to open files and creating directories if necessary.
 // The path should be defined by SetFilePath(). To unset, just call
-// SetFilePath(NULL). The total size of path and filename combined
+// UnsetFilePath(). The total size of path and filename combined
 // must be smaller than FILEPATH_MAX_SIZE characters. Additionally,
 // each path element must be smaller than PATH_ELEMENT_MAX_SIZE
 // characters.
@@ -37,6 +50,7 @@ gsl_vector * VectorNewVectorFromDivisionElementByElement(gsl_vector * numerator,
 // After using a path prefix, set it to NULL so any following code that
 // expects an 'empty' path can work as expected.
 void SetFilePath(const char path[]);
+void UnsetFilePath(void);
 FILE * OpenFile(const char filename[]);
 
 #endif /* AuxiliaryFunctions_h */

@@ -437,13 +437,13 @@ double Pressure(double termodynamic_potential)
 	return - termodynamic_potential + vacuum_energy_density;
 }
 
-double TermodynamicPotential(double scalar_density,
-							 double barionic_density,
-							 double proton_density,
-							 double neutron_density,
-							 double proton_chemical_potential,
-							 double neutron_chemical_potential,
-							 double kinectic_energy_density)
+double ThermodynamicPotential(double scalar_density,
+                              double barionic_density,
+                              double proton_density,
+                              double neutron_density,
+                              double proton_chemical_potential,
+                              double neutron_chemical_potential,
+                              double kinectic_energy_density)
 {
 	double rho_3 = proton_density - neutron_density;
 

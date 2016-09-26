@@ -18,9 +18,14 @@ typedef struct _gap_equation_input{
 	
 } gap_equation_input;
 
-double SolveGapEquation(double proton_density, double neutron_density, double proton_fermi_momentum, double neutron_fermi_momentum);
+double SolveGapEquation(double proton_density,
+                        double neutron_density,
+                        double proton_fermi_momentum,
+                        double neutron_fermi_momentum);
 
-double ScalarDensity(double mass, double fermi_momentum, double cutoff);
+double ScalarDensity(double mass,
+                     double fermi_momentum,
+                     double cutoff);
 
 double ProtonChemicalPotential(double proton_fermi_momentum,
                                double scalar_density,
@@ -44,15 +49,17 @@ double EnergyDensity(double pressure,
 
 double Pressure(double termodynamic_potential);
 
-double TermodynamicPotential(double scalar_density,
-                             double barionic_density,
-                             double proton_density,
-                             double neutron_density,
-                             double proton_chemical_potential,
-                             double neutron_chemical_potential,
-                             double kinectic_energy_density);
+double ThermodynamicPotential(double scalar_density,
+                              double barionic_density,
+                              double proton_density,
+                              double neutron_density,
+                              double proton_chemical_potential,
+                              double neutron_chemical_potential,
+                              double kinectic_energy_density);
 
-double KinecticEnergyDensity(double mass, double proton_fermi_momentum, double neutron_fermi_momentum);
+double KinecticEnergyDensity(double mass,
+                             double proton_fermi_momentum,
+                             double neutron_fermi_momentum);
 
 double ElectronPressure(double electron_fermi_momentum);
 
@@ -64,10 +71,12 @@ double GapEquation(double mass, void * input);
 
 double FermiMomentum(double density);
 
-void SolveMultiRoots(double barionic_density, double * return_mass, double * return_proton_fraction);
+void SolveMultiRoots(double  barionic_density,
+                     double *return_mass,
+                     double *return_proton_fraction);
 
-int MultiDimensionalRootFinderHelperFunction(const gsl_vector * x,
-                                             void * p,
-                                             gsl_vector * return_values);
+int MultiDimensionalRootFinderHelperFunction(const gsl_vector *x,
+                                             void             *p,
+                                             gsl_vector       *return_values);
 
 #endif /* EOS_h */
