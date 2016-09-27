@@ -1,4 +1,7 @@
 heos_xcode
+multioutput/
+!multioutput/gnuplot.gpi
+!multioutput/graph/
 .DS_Store
 heos
 *.o
