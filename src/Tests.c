@@ -6,18 +6,6 @@
 //  Copyright © 2016 Clebson Graeff. All rights reserved.
 //
 
-#include <stdbool.h>
-#include <strings.h>
-#include <stdio.h>
-#include <math.h>
-
-#include "CommandlineOptions.h"
-#include "Tests.h"
-#include "AuxiliaryFunctions.h"
-#include "ZeroTemperatureEOS.h"
-#include "Constants.h"
-#include "Parameters.h"
-
 /*
  * RunTests(): A place to run tests.
  *
@@ -38,22 +26,22 @@
  *  The tests should be written as follows:
  *  RunTests()
  *  {
- *      #pragma mark Thermodynamic potential as function of mass (1)
+ *      #pragma mark A Title (1)
  *      //
  *      // Description (2)
  *      //
  *      if (true) (3)
  *      {
- *          printf("Thermodynamic potential as function of mass\n"); (4)
+ *          printf("TEST: A Title\n"); (4)
  *
  *          // Set path for and create log file
- *          SetFilePath("tests/zeroed-gap-equation/"); (5)
+ *          SetFilePath("tests/a-title/"); (5)
  *          FILE * log_file = OpenFile("run.log");
  *
  *          // Set path for other files
- *          SetFilePath("tests/zeroed-gap-equation/data/"); (6)
+ *          SetFilePath("tests/a-title/data/"); (6)
  *
- *          SetParametersSet("eNJL1"); (7)
+ *          SetParametersSet("aSet"); (7)
  *
  *          // do stuff (8)
  *
@@ -89,9 +77,21 @@
  *
  */
 
+#include <stdbool.h>
+#include <strings.h>
+#include <stdio.h>
+#include <math.h>
+
+#include "CommandlineOptions.h"
+#include "Tests.h"
+#include "AuxiliaryFunctions.h"
+#include "ZeroTemperatureEOS.h"
+#include "Constants.h"
+#include "Parameters.h"
+
 void RunTests()
 {
-#pragma mark Zeroed Gap Equation
+#pragma mark Zeroed gap equation
     
     // Write the zeroed gap equation for a set of proton and neutron
     // densities, for the eNJL1 parameters set. This serves for
@@ -99,7 +99,7 @@ void RunTests()
     // curve. This tests functions used in the zero temperature case.
 	if (true)
 	{
-        printf("\tZeroed Gap Equation\n");
+        printf("TEST: Zeroed gap equation\n");
         
         // Set path for and create log file
         SetFilePath("tests/zeroed-gap-equation/");
@@ -172,13 +172,13 @@ void RunTests()
     //
     if (true)
     {
-        printf("Thermodynamic potential as function of mass\n");
+        printf("TEST: Thermodynamic potential as function of mass\n");
         // Set path for and create log file
-        SetFilePath("tests/zeroed-gap-equation/");
+        SetFilePath("tests/thermodynamic-potential-as-func-of-mass/");
         FILE * log_file = OpenFile("run.log");
         
         // Set path for other files
-        SetFilePath("tests/zeroed-gap-equation/data/");
+        SetFilePath("tests/thermodynamic-potential-as-func-of-mass/data/");
         
         SetParametersSet("eNJL1");
         
@@ -188,7 +188,7 @@ void RunTests()
         double mass_max = 3.0E3;    // (MeV)
 
         double proton_fraction = 0.5;
-        double barionic_density = 0.15; // (MeV) // Should be zero
+        double barionic_density = 0.0; // (MeV) // Should be zero
 
         gsl_vector * mass_vector = gsl_vector_alloc(points_number);
         gsl_vector * potential_vector = gsl_vector_alloc(points_number);
@@ -208,8 +208,8 @@ void RunTests()
                                                                    proton_fermi_momentum,
                                                                    neutron_fermi_momentum);
 
-            double scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.cutoff)
-                                    + ScalarDensity(mass, neutron_fermi_momentum, parameter.cutoff);
+            double scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.theory.cutoff)
+                                    + ScalarDensity(mass, neutron_fermi_momentum, parameters.theory.cutoff);
 
             // If barionic density == 0, the chemical
             // potential functions must return zero.
@@ -226,10 +226,6 @@ void RunTests()
                                                                          barionic_density,
                                                                          proton_density,
                                                                          neutron_density);
-
-            double kinectic_energy_density = KinecticEnergyDensity(mass,
-                                                                   proton_fermi_momentum,
-                                                                   neutron_fermi_momentum);
 
             double potential = ThermodynamicPotential(scalar_density,
                                                       barionic_density,
@@ -250,6 +246,15 @@ void RunTests()
                            2,
                            mass_vector,
                            potential_vector);
+        
+        fprintf(log_file,
+                "The thermodynamic potential as a function\n"
+                "of mass. In particular, we are interested in seeing\n"
+                "that the minimum value is obtained at mass = nucleon mass.\n"
+                "(This is valid for zero temperature and chemical potential"
+                "[chemical potential == 0 -> barionic density == 0])\n");
+        
+        PrintParametersToFile(log_file);
         
         fclose(log_file);
         
