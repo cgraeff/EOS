@@ -2,7 +2,7 @@ SHELL := /bin/bash # Use bash as shell
 TARGET = heos
 
 # List set for multirun
-MULTIRUN_SETS = eNJL1 eNJL2 eNJL3 eNJL1m eNJL2m
+MULTIRUN_SETS = eNJL1 eNJL2 eNJL3 eNJL1m eNJL2m eNJL1OmegaRho1 eNJL2OmegaRho1 eNJL3SigmaRho1
 
 .PHONY: all run graph tests tgraph clean
 
@@ -42,6 +42,7 @@ smultirun:
 mgraph:
 	@echo "[Plotting for multiple parameterizations ...]"
 	@for dir in $(MULTIRUN_SETS); do \
+		echo $$dir; \
 		cd "multioutput/$$dir"; \
 		for subdir in `echo */`; do \
 			cd "$$subdir"; \
