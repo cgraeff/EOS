@@ -307,7 +307,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.parameters_set_identifier = "Template";
 
 	p.minimum_density = 1.0E-3; // fm^-3
-	p.maximum_density = 10.0; // fm^-3
+	p.maximum_density = 2.0; // fm^-3
 
 	p.points_number = 3000;
 	
