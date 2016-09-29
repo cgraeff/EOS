@@ -59,7 +59,13 @@ tests:
 	@echo "[done.]"
 tgraph:
 	@echo "[Plotting tests ...]"
-	@for dir in `echo tests/*/`; do cd "$$dir" && gnuplot gnuplot.gpi && cd ../..; done
+	@cd tests/ ; \
+	for dir in `echo */`; do \
+		cd "$$dir"; \
+		echo "$$dir"; \
+		gnuplot gnuplot.gpi; \
+		cd ../; \
+	done;
 	@echo "[done.]"
 clean:
 	@echo "[Cleaning ...]"
