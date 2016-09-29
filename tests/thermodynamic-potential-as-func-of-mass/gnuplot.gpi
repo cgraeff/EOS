@@ -1,0 +1,12 @@
+set term png
+
+set out 'graph/thermodynamic_potential_by_mass.png'
+
+set xlabel '$m$ (MeV)'
+set ylabel '$\omega$ (MeV)'
+
+plot "data/thermodynamic_potential_by_mass.dat" w l notitle
+
+set term tikz size 14cm, 9cm
+set out 'graph/thermodynamic_potential_by_mass.tex'
+replot
