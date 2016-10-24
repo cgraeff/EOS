@@ -307,8 +307,10 @@ int SolveZeroTemperatureStarEOS(){
 
 	gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
 	gsl_vector * energy_density_vector = gsl_vector_alloc(parameters.points_number);
+    
     gsl_vector * electron_energy_density_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * electron_pressure_vector = gsl_vector_alloc(parameters.points_number);
+    gsl_vector * electron_chemical_potential_vector = gsl_vector_alloc(parameters.points_number);
 
     /*
      * Main loop (on barionic density)
@@ -390,6 +392,9 @@ int SolveZeroTemperatureStarEOS(){
 		gsl_vector_set(thermodynamic_potential_vector, i, thermodynamic_potential);
 
         // Electron contributions to energy and pressure
+        double electron_chemical_potential = sqrt(pow(electron_fermi_momentum, 2.0) + parameters.theory.electron_mass);
+        gsl_vector_set(electron_chemical_potential_vector, i, electron_chemical_potential);
+        
         double electron_pressure = ElectronPressure(electron_fermi_momentum);
         double electron_energy_density = ElectronEnergyDensity(electron_fermi_momentum);
         
@@ -463,6 +468,12 @@ int SolveZeroTemperatureStarEOS(){
                        barionic_density_vector,
                        neutron_chemical_potential_vector);
 
+    WriteVectorsToFile("electron_chemical_potential.dat",
+                       "# barionic density (fm^{-3}), electron chemical potential (MeV)\n",
+                       2,
+                       barionic_density_vector,
+                       electron_chemical_potential_vector);
+    
     WriteVectorsToFile("kinectic_energy_density.dat",
                       "# barionic density (fm^{-3}), kinectic energy density (MeV/fm^{3})\n",
                       2,
@@ -541,6 +552,10 @@ int SolveZeroTemperatureStarEOS(){
     gsl_vector_free(pressure_vector);
     gsl_vector_free(energy_density_vector);
     gsl_vector_free(energy_by_nucleon_vector);
+    
+    gsl_vector_free(electron_energy_density_vector);
+    gsl_vector_free(electron_pressure_vector);
+    gsl_vector_free(electron_chemical_potential_vector);
 
     if (options.verbose)
         printf("Done!\n");

@@ -1,5 +1,7 @@
 set xlabel '$\rho_B$ ($\rm{fm}^{-3}$)'
 
+unset key
+
 set ylabel '$\epsilon/\rho_B = E / A$ (MeV)'
 set term png
 set out "graph/energy_density_per_particle.png"
