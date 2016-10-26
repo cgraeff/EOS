@@ -317,8 +317,8 @@ Parameters NewCopyOfParametersSetFromTemplate()
 	p.gap_equation_solver.max_iterations = 1000;
 	p.gap_equation_solver.lower_bound = 1.0E-5; // Low, but not zero. In zero f(M) = 0;
 	p.gap_equation_solver.upper_bound = 3000.0;	// MeV (much bigger than expected maximum mass)
-	p.gap_equation_solver.abs_error = 1E-3;
-	p.gap_equation_solver.rel_error = 1E-2;
+	p.gap_equation_solver.abs_error = 1E-10;
+	p.gap_equation_solver.rel_error = 1E-10;
 
 	p.theory.G_S = 0;              // (fm)^2
     p.theory.G_V = 0;              // (fm)^2
