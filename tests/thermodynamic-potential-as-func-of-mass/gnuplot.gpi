@@ -5,7 +5,16 @@ set out 'graph/thermodynamic_potential_by_mass.png'
 set xlabel '$m$ (MeV)'
 set ylabel '$\omega$ (MeV)'
 
-plot "data/thermodynamic_potential_by_mass.dat" w l notitle
+set arrow from 939,-1000 to 939,-100 nohead
+
+plot "data/thermodynamic_potential_by_mass-eNJL1.dat" w l t 'eNJL1', \
+     "data/thermodynamic_potential_by_mass-eNJL1m.dat" w l t 'eNJL1m', \
+     "data/thermodynamic_potential_by_mass-eNJL1OmegaRho1.dat" w l t 'eNJL1$\omega\rho$1', \
+     "data/thermodynamic_potential_by_mass-eNJL2.dat" w l t 'eNJL2', \
+     "data/thermodynamic_potential_by_mass-eNJL2m.dat" w l t 'eNJL2m', \
+     "data/thermodynamic_potential_by_mass-eNJL2OmegaRho1.dat" w l t 'eNJL2$\omega\rho$1', \
+     "data/thermodynamic_potential_by_mass-eNJL3.dat" w l t 'eNJL3', \
+     "data/thermodynamic_potential_by_mass-eNJL3SigmaRho1.dat" w l t 'eNJL3$\sigma\rho$1'
 
 set term tikz size 14cm, 9cm
 set out 'graph/thermodynamic_potential_by_mass.tex'

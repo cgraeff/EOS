@@ -6,7 +6,7 @@ set ylabel '$\epsilon/\rho_B = E / A$ (MeV)'
 set term png
 set out "graph/energy_density_per_particle.png"
 plot "data/energy_density_per_particle.dat" w l
-set term tikz size 14cm, 9cm
+set term tikz size 8cm, 9cm
 set out "graph/energy_density_per_particle.tex"
 replot
 
@@ -14,7 +14,7 @@ set ylabel '$\epsilon$ (MeV)'
 set term png
 set out "graph/energy_density.png"
 plot "data/energy_density.dat" w l
-set term tikz size 14cm, 9cm
+set term tikz size 8cm, 9cm
 set out "graph/energy_density.tex"
 replot
 
@@ -22,7 +22,7 @@ set ylabel '$p$ (MeV)'
 set term png
 set out "graph/pressure.png"
 plot "data/pressure.dat" w l
-set term tikz size 14cm, 9cm
+set term tikz size 8cm, 9cm
 set out "graph/pressure.tex"
 replot
 

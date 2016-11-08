@@ -180,7 +180,8 @@ void RunTests()
         // Set path for other files
         SetFilePath("tests/thermodynamic-potential-as-func-of-mass/data/");
         
-        SetParametersSet("eNJL1");
+        char *sets[] = {"eNJL1", "eNJL1m", "eNJL1OmegaRho1", "eNJL2", "eNJL2m", "eNJL2OmegaRho1", "eNJL3",
+                        "eNJL3SigmaRho1"};
         
         int points_number = 1000;
 
@@ -194,7 +195,6 @@ void RunTests()
         gsl_vector * potential_vector = gsl_vector_alloc(points_number);
 
         double mass_step = (mass_max - mass_min) / (points_number - 1);
-        double mass = mass_min;
 
         double proton_density = proton_fraction * barionic_density;
         double neutron_density = (1.0 - proton_fraction) * barionic_density;
@@ -202,50 +202,61 @@ void RunTests()
         double proton_fermi_momentum = FermiMomentum(proton_density);
         double neutron_fermi_momentum = FermiMomentum(neutron_density);
 
-        for (int i = 0; i < points_number; i++){
 
-            double kinectic_energy_density = KinecticEnergyDensity(mass,
-                                                                   proton_fermi_momentum,
-                                                                   neutron_fermi_momentum);
+        for (int set = 0; set < 8; set++){
+            
+            SetParametersSet(sets[set]);
 
-            double scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.theory.cutoff)
-                                    + ScalarDensity(mass, neutron_fermi_momentum, parameters.theory.cutoff);
+            double mass = mass_min;
 
-            // If barionic density == 0, the chemical
-            // potential functions must return zero.
-            double proton_chemical_potential = ProtonChemicalPotential(proton_fermi_momentum,
-                                                                       scalar_density,
-                                                                       mass,
-                                                                       barionic_density,
-                                                                       proton_density,
-                                                                       neutron_density);
+            for (int i = 0; i < points_number; i++){
 
-            double neutron_chemical_potential = NeutronChemicalPotential(neutron_fermi_momentum,
-                                                                         scalar_density,
-                                                                         mass,
-                                                                         barionic_density,
-                                                                         proton_density,
-                                                                         neutron_density);
+                double kinectic_energy_density = KinecticEnergyDensity(mass,
+                                                                       proton_fermi_momentum,
+                                                                       neutron_fermi_momentum);
 
-            double potential = ThermodynamicPotential(scalar_density,
-                                                      barionic_density,
-                                                      proton_density,
-                                                      neutron_density,
-                                                      proton_chemical_potential,
-                                                      neutron_chemical_potential,
-                                                      kinectic_energy_density);
+                double scalar_density = ScalarDensity(mass, proton_fermi_momentum, parameters.theory.cutoff)
+                                        + ScalarDensity(mass, neutron_fermi_momentum, parameters.theory.cutoff);
 
-            gsl_vector_set(mass_vector, i, mass);
-            gsl_vector_set(potential_vector, i, potential);
+                // If barionic density == 0, the chemical
+                // potential functions must return zero.
+                double proton_chemical_potential = ProtonChemicalPotential(proton_fermi_momentum,
+                                                                           scalar_density,
+                                                                           mass,
+                                                                           barionic_density,
+                                                                           proton_density,
+                                                                           neutron_density);
 
-            mass += mass_step;
+                double neutron_chemical_potential = NeutronChemicalPotential(neutron_fermi_momentum,
+                                                                             scalar_density,
+                                                                             mass,
+                                                                             barionic_density,
+                                                                             proton_density,
+                                                                             neutron_density);
+
+                double potential = ThermodynamicPotential(scalar_density,
+                                                          barionic_density,
+                                                          proton_density,
+                                                          neutron_density,
+                                                          proton_chemical_potential,
+                                                          neutron_chemical_potential,
+                                                          kinectic_energy_density);
+
+                gsl_vector_set(mass_vector, i, mass);
+                gsl_vector_set(potential_vector, i, potential);
+
+                mass += mass_step;
+            }
+
+            char filename[256];
+            sprintf(filename, "thermodynamic_potential_by_mass-%s.dat", sets[set]);
+            
+            WriteVectorsToFile(filename,
+                               "# mass (MeV), thermodynamic potential (MeV)\n",
+                               2,
+                               mass_vector,
+                               potential_vector);
         }
-
-        WriteVectorsToFile("thermodynamic_potential_by_mass.dat",
-                           "# mass (MeV), thermodynamic potential (MeV)\n",
-                           2,
-                           mass_vector,
-                           potential_vector);
         
         fprintf(log_file,
                 "The thermodynamic potential as a function\n"
