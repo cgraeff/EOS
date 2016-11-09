@@ -17,6 +17,7 @@
 #include "Parameters.h"
 #include "Constants.h"
 #include "ZeroTemperatureEOS.h"
+#include "FiniteTemperatureEOS.h"
 #include "AuxiliaryFunctions.h"
 
 int SolveZeroTemperatureEOS();
@@ -357,21 +358,19 @@ int SolveFiniteTemperatureEOS(){
         
         // If possible, change the zero temperature one to accept the renormalized chemical potential.
         // This shall make the chemical potential functions the same for zero and finite temperature
-        double proton_chemical_potential =	ProtonChemicalPotential(proton_fermi_momentum,
-                                                                    total_scalar_density,
-                                                                    mass,
-                                                                    barionic_density,
-                                                                    proton_density,
-                                                                    neutron_density);
+        double proton_chemical_potential =	FiniteTemperatureProtonChemicalPotential(proton_renormalized_chemical_potential,
+                                                                                     mass,
+                                                                                     total_scalar_density,
+                                                                                     proton_density,
+                                                                                     neutron_density);
         
         gsl_vector_set(proton_chemical_potential_vector, i, proton_chemical_potential);
         
-        double neutron_chemical_potential =	NeutronChemicalPotential(neutron_fermi_momentum,
-                                                                     total_scalar_density,
-                                                                     mass,
-                                                                     barionic_density,
-                                                                     proton_density,
-                                                                     neutron_density);
+        double neutron_chemical_potential =	FiniteTemperatureNeutronChemicalPotential(neutron_renormalized_chemical_potential,
+                                                                                      mass,
+                                                                                      total_scalar_density,
+                                                                                      proton_density,
+                                                                                      neutron_density);
         
         gsl_vector_set(neutron_chemical_potential_vector, i, neutron_chemical_potential);
         

@@ -13,6 +13,11 @@
 
 typedef struct _parameters
 {
+    // FIXME: Each of those groups of parameters should be declared in the header of
+    // the code file which actually uses them. This should make reuse much easier
+    // as we may just declare an instance here. This should make juggling the groups
+    // around much easier too. Where should the ungrouped and the theory group be
+    // declared? Here still?
     char * parameters_set_identifier;
     char * parameters_set_origin;
 
@@ -75,6 +80,28 @@ typedef struct _parameters
             double upper_bound;
         } special_case;
     } multiroot;
+    
+    // Parameters for the finite temperature case
+    struct _finite_temperature{
+        
+        bool use_last_solution_as_guess;
+        
+        struct _finite_temp_guesses{
+            double mass;
+            double proton_renormalized_chemical_potential;
+            double neutron_renormalized_chemical_potential;
+        } guesses;
+        
+        struct _finite_temperature_special_case{
+            double mass_tolerance;
+        } special_case;
+    } finite_temperature;
+    
+    int fermi_dirac_integrals_max_interval_num;
+    double fermi_dirac_integrals_abs_error;
+    double fermi_dirac_integrals_rel_error;
+    double fermi_dirac_integrals_max_sub_interval;
+    double fermi_dirac_integrals_integration_key;
     
 } Parameters;
 
