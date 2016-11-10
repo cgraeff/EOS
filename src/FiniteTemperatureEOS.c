@@ -50,7 +50,8 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
     
     // Check for zero mass special case. As mass != 0 is the
     // case that appears first, it is implemented first.
-    if (parameters.finite_temperature.guesses.mass > parameters.multiroot.special_case.mass_tolerance){ //FIXME: this is really wrong, the test
+    if (parameters.finite_temperature.guesses.mass > parameters.multiroot.special_case.mass_tolerance){
+        // FIXME: this is really wrong, the test
         // should not test the initial guess, but the current value of the guess. This will work only if we are
         // using the last solution as guess. The simplest way to solve this is always use the last solution as guess
         
@@ -64,10 +65,16 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
         
         gsl_vector * initial_guess = gsl_vector_alloc(dimension);
         gsl_vector * return_results = gsl_vector_alloc(dimension);
-        
-        gsl_vector_set(initial_guess, 0, sqrt(parameters.finite_temperature.guesses.mass));
-        gsl_vector_set(initial_guess, 1, sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
-        gsl_vector_set(initial_guess, 2, sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
+
+        gsl_vector_set(initial_guess,
+                       0,
+                       sqrt(parameters.finite_temperature.guesses.mass));
+        gsl_vector_set(initial_guess,
+                       1,
+                       sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
+        gsl_vector_set(initial_guess,
+                       2,
+                       sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
         
         int status = MultidimensionalRootFinder(dimension,
                                                 &f,
@@ -96,8 +103,10 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
         // Save solution as guess for next iteration
         if (parameters.finite_temperature.use_last_solution_as_guess == true){
             parameters.finite_temperature.guesses.mass = *return_mass;
-            parameters.finite_temperature.guesses.proton_renormalized_chemical_potential = *return_proton_renormalized_chemical_potential;
-            parameters.finite_temperature.guesses.neutron_renormalized_chemical_potential = *return_neutron_renormalized_chemical_potential;
+            parameters.finite_temperature.guesses.proton_renormalized_chemical_potential =
+                *return_proton_renormalized_chemical_potential;
+            parameters.finite_temperature.guesses.neutron_renormalized_chemical_potential =
+                *return_neutron_renormalized_chemical_potential;
         }
         
         return 0;
@@ -107,7 +116,7 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
         
         // Set dimension (number of equations|variables to solve|find)
         const int dimension = 2;
-        
+
         gsl_multiroot_function f;
         f.f = &FiniteTemperatureZeroMassSpecialCaseHelperFunction;
         f.n = dimension;
@@ -116,9 +125,15 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
         gsl_vector * initial_guess = gsl_vector_alloc(dimension);
         gsl_vector * return_results = gsl_vector_alloc(dimension);
         
-        gsl_vector_set(initial_guess, 0, sqrt(parameters.finite_temperature.guesses.mass));
-        gsl_vector_set(initial_guess, 1, sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
-        gsl_vector_set(initial_guess, 2, sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
+        gsl_vector_set(initial_guess,
+                       0,
+                       sqrt(parameters.finite_temperature.guesses.mass));
+        gsl_vector_set(initial_guess,
+                       1,
+                       sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
+        gsl_vector_set(initial_guess,
+                       2,
+                       sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
         
         int status = MultidimensionalRootFinder(dimension,
                                                 &f,
@@ -145,8 +160,10 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
         // Save solution as guess for next iteration
         if (parameters.finite_temperature.use_last_solution_as_guess == true){
             parameters.finite_temperature.guesses.mass = *return_mass;
-            parameters.finite_temperature.guesses.proton_renormalized_chemical_potential = *return_proton_renormalized_chemical_potential;
-            parameters.finite_temperature.guesses.neutron_renormalized_chemical_potential = *return_neutron_renormalized_chemical_potential;
+            parameters.finite_temperature.guesses.proton_renormalized_chemical_potential =
+                *return_proton_renormalized_chemical_potential;
+            parameters.finite_temperature.guesses.neutron_renormalized_chemical_potential =
+                *return_neutron_renormalized_chemical_potential;
         }
         
 
@@ -199,8 +216,12 @@ int FiniteTemperatureMultiDimensionalRootFinderFunction(const gsl_vector   *x,
     const double neutron_renormalized_chemical_potential = pow(gsl_vector_get(x, 2), 2.0);
     
     // calculate things to be zeroed
-    double proton_scalar_density = ScalarDensityAtFiniteTemperature(mass, proton_renormalized_chemical_potential, parameters.theory.cutoff);
-    double neutron_scalar_density = ScalarDensityAtFiniteTemperature(mass, neutron_renormalized_chemical_potential, parameters.theory.cutoff);
+    double proton_scalar_density = ScalarDensityAtFiniteTemperature(mass,
+                                                                    proton_renormalized_chemical_potential,
+                                                                    parameters.theory.cutoff);
+    double neutron_scalar_density = ScalarDensityAtFiniteTemperature(mass,
+                                                                     neutron_renormalized_chemical_potential,
+                                                                     parameters.theory.cutoff);
     double total_scalar_density = proton_scalar_density + neutron_scalar_density;
     
     // the zeroed gap eq is probably the same as in the zero temp case
@@ -468,7 +489,7 @@ double OnedimensionalIntegrator(gsl_function * F, double lower_limit, double upp
                         workspace,
                         &integral,
                         &abserr);
-    
+
     gsl_integration_workspace_free(workspace);
     
     return integral;
@@ -480,7 +501,16 @@ double FiniteTemperatureProtonChemicalPotential(double renormalized_proton_chemi
                                                 double proton_barionic_density,
                                                 double neutron_barionic_density)
 {
-    
+    double total_barionic_density = proton_barionic_density + neutron_barionic_density;
+    double rho_3 = proton_barionic_density - neutron_barionic_density;
+
+    return renormalized_neutron_chemical_potential
+           - 2.0 * parameters.theory.G_V * total_barionic_density
+           - 2.0 * parameters.theory.G_SV * total_barionic_density * pow(total_scalar_density, 2.0)
+           - 2.0 * parameters.theory.G_RHO * rho_3;
+           - 2.0 * parameters.theory.G_VRHO * total_barionic_density * pow(rho_3, 2.0)
+           - 2.0 * parameters.theory.G_VRHO * rho_3 * pow(total_barionic_density, 2.0)
+           - 2.0 * parameters.theory.G_SRHO * rho_3 * pow(total_scalar_density, 2.0);
 }
 
 double FiniteTemperatureNeutronChemicalPotential(double renormalized_neutron_chemical_potential,
@@ -489,12 +519,68 @@ double FiniteTemperatureNeutronChemicalPotential(double renormalized_neutron_che
                                                  double proton_barionic_density,
                                                  double neutron_barionic_density)
 {
-    
+    double total_barionic_density = proton_barionic_density + neutron_barionic_density;
+    double rho_3 = proton_barionic_density - neutron_barionic_density;
+
+    return renormalized_neutron_chemical_potential
+           - 2.0 * parameters.theory.G_V * total_barionic_density
+           - 2.0 * parameters.theory.G_SV * total_barionic_density * pow(total_scalar_density, 2.0)
+           + 2.0 * parameters.theory.G_RHO * rho_3;
+           - 2.0 * parameters.theory.G_VRHO * total_barionic_density * pow(rho_3, 2.0)
+           + 2.0 * parameters.theory.G_VRHO * rho_3 * pow(total_barionic_density, 2.0)
+           + 2.0 * parameters.theory.G_SRHO * rho_3 * pow(total_scalar_density, 2.0);
 }
 
-double FiniteTemperatureKinecticEnergyDensity()
+// FIXME: just call this FermiDiracDistributionParameters would
+// be much better.
+typedef struct _ft_temp_kinectic_energy_integrand_params{
+    double mass;
+    double chemical_potential;
+    double temperature;
+} ft_temp_kinectic_energy_integrand_params;
+
+double FiniteTemperatureKinecticEnergyDensity(double mass,
+                                              double proton_renormalized_chemical_potential,
+                                              double neutron_renormalized_chemical_potential)
 {
-    
+    gsl_function F;
+    F.function = &FiniteTemperatureKinecticEnergyDensityIntegrand;
+
+    ft_temp_kinectic_energy_integrand_params *params;
+    params.mass = mass;
+    params.chemical_potential = proton_renormalized_chemical_potential;
+    params.temperature = &(parameters.temperature);
+
+    F.params = params;
+
+    double integral = OneDimensionalIntegrator(&F, 0.0, parameters.theory.cutoff);
+
+    double proton_kinectic_energy = CTE_NUM_COLORS * integral / pow(M_PI, 2.0);
+
+    params.chemical_potential = proton_renormalized_chemical_potential;
+
+    double integral = OneDimensionalIntegrator(&F, 0.0, parameters.theory.cutoff);
+
+    double neutron_kinectic_energy = CTE_NUM_COLORS * integral / pow(M_PI, 2.0);
+
+    return proton_kinectic_energy + neutron_kinectic_energy;
+}
+
+double FiniteTemperatureKinecticEnergyDensityIntegrand(double momentum, void *par)
+{
+    ft_temp_kinectic_energy_integrand_params *params = (ft_temp_kinectic_energy_integrand_params *)par;
+
+    double energy = sqrt(pow(momentum, 2.0) + pow(params->mass, 2.0));
+
+    double dist_plus = FermionNumberDistributionPlus(energy,
+                                                     params->chemical_potential,
+                                                     params->temperature);
+
+    double dist_minus = FermionNumberDistributionMinus(energy,
+                                                       params->chemical_potential,
+                                                       params->temperature);
+
+    return pow(momentum, 2.0) * (dist_plus - dist_minus) / energy;
 }
 
 double FiniteTemperatureThermodynamicPotential()
