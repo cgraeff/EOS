@@ -327,7 +327,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.theory.G_VRHO = 0.0;         // (fm)^8
     p.theory.G_SRHO = 0.0;         // (fm)^8
     p.theory.cutoff = 0.0;         // (MeV)
-    p.theory.nucleon_mass = 939.0; // (MeV)
+    p.theory.nucleon_mass = 939.0; // (MeV) // FIXME: this should be the bare_mass!
     p.theory.electron_mass = 0.511;// (MeV)
     p.theory.bare_mass = 0.0;      // (MeV)
 
@@ -344,6 +344,27 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.multiroot.special_case.mass_tolerance = 0.1;
     p.multiroot.special_case.lower_bound = 0.1; // The mapping with tanh(x) prevents
     p.multiroot.special_case.upper_bound = 0.9; // the use of extremes of the proton fraction
+    
+    p.finite_temperature.use_last_solution_as_guess = true;
+    p.finite_temperature.guesses.mass = p.theory.nucleon_mass;
+    p.finite_temperature.guesses.proton_renormalized_chemical_potential = 600; // MeV
+    p.finite_temperature.guesses.neutron_renormalized_chemical_potential = 600; // MeV
+    p.finite_temperature.special_case.mass_tolerance = 0.1;
+    
+    p.fermi_dirac_integrals.max_interval_num = 1000;
+    p.fermi_dirac_integrals.abs_error = 1E-5;
+    p.fermi_dirac_integrals.rel_error = 1E-5;
+    p.fermi_dirac_integrals.max_sub_interval = 1000;
+    p.fermi_dirac_integrals.integration_key = GSL_INTEG_GAUSS61;
+    
+    p.entropy_integrals.interval_num = 1000;
+    p.entropy_integrals.abserr = 1E-5;
+    p.entropy_integrals.lower_limit = 0.0;
+    p.entropy_integrals.upper_limit = parameters.theory.cutoff;
+    p.entropy_integrals.abs_error = 1.0E-3;
+    p.entropy_integrals.rel_error = 1.0E-3;
+    p.entropy_integrals.max_sub_interval = 1000;
+    p.entropy_integrals.integration_key = GSL_INTEG_GAUSS61;
     
   	return p;
 }

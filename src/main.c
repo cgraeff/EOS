@@ -51,9 +51,7 @@ int main(int argc, char * argv[])
         SolveZeroTemperatureEOS();
     }
     else if (parameters.temperature > 0){
-        //SolveFiniteTemperatureEOS();
-        printf("Finite temperature is not yet implemented.\n");
-        abort();
+        SolveFiniteTemperatureEOS();
     }
     else{
         printf("Values of temperature must be non-negative.\n");
@@ -309,6 +307,9 @@ int SolveFiniteTemperatureEOS(){
     gsl_vector * kinectic_energy_density_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * thermodynamic_potential_vector = gsl_vector_alloc(parameters.points_number);
     
+    gsl_vector * proton_entropy_density_vector = gsl_vector_alloc(parameters.points_number);
+    gsl_vector * neutron_entropy_density_vector = gsl_vector_alloc(parameters.points_number);
+    
     gsl_vector * pressure_vector = gsl_vector_alloc(parameters.points_number);
     gsl_vector * energy_density_vector = gsl_vector_alloc(parameters.points_number);
     
@@ -335,23 +336,27 @@ int SolveFiniteTemperatureEOS(){
             fflush(stdout);
         }
         
-        double proton_density = parameters.proton_fraction * barionic_density;
-        double neutron_density = (1.0 - parameters.proton_fraction) * barionic_density;
+        double proton_barionic_density = parameters.proton_fraction * barionic_density;
+        double neutron_barionic_density = (1.0 - parameters.proton_fraction) * barionic_density;
         
         gsl_vector_set(barionic_density_vector, i, barionic_density);
         
         double mass;
         double proton_renormalized_chemical_potential;
         double neutron_renormalized_chemical_potential;
-        int status = SolveMultiRootsFiniteTemp(proton_density,
-                                               neutron_density,
-                                               &mass,
-                                               &proton_renormalized_chemical_potential,
-                                               &neutron_renormalized_chemical_potential);
-        
-        double total_scalar_density = ScalarDensityAtFiniteTemperature(mass, proton_renormalized_chemical_potential, parameters.theory.cutoff)
-                                      + ScalarDensityAtFiniteTemperature(mass, neutron_renormalized_chemical_potential, parameters.theory.cutoff);
-        
+        SolveMultiRootsFiniteTemp(proton_barionic_density,
+                                  neutron_barionic_density,
+                                  &mass,
+                                  &proton_renormalized_chemical_potential,
+                                  &neutron_renormalized_chemical_potential);
+
+        double proton_scalar_density = ScalarDensityAtFiniteTemperature(mass,
+                                                                        proton_renormalized_chemical_potential,
+                                                                        parameters.theory.cutoff);
+        double neutron_scalar_density = ScalarDensityAtFiniteTemperature(mass,
+                                                                         neutron_renormalized_chemical_potential,
+                                                                         parameters.theory.cutoff);
+        double total_scalar_density = proton_scalar_density + neutron_scalar_density;
         
         gsl_vector_set(scalar_density_vector, i , total_scalar_density);
         gsl_vector_set(mass_vector, i, mass);
@@ -361,42 +366,53 @@ int SolveFiniteTemperatureEOS(){
         double proton_chemical_potential =	FiniteTemperatureProtonChemicalPotential(proton_renormalized_chemical_potential,
                                                                                      mass,
                                                                                      total_scalar_density,
-                                                                                     proton_density,
-                                                                                     neutron_density);
+                                                                                     proton_barionic_density,
+                                                                                     neutron_barionic_density);
         
         gsl_vector_set(proton_chemical_potential_vector, i, proton_chemical_potential);
         
         double neutron_chemical_potential =	FiniteTemperatureNeutronChemicalPotential(neutron_renormalized_chemical_potential,
                                                                                       mass,
                                                                                       total_scalar_density,
-                                                                                      proton_density,
-                                                                                      neutron_density);
+                                                                                      proton_barionic_density,
+                                                                                      neutron_barionic_density);
         
         gsl_vector_set(neutron_chemical_potential_vector, i, neutron_chemical_potential);
         
-        double kinectic_energy_density = KinecticEnergyDensity(mass, proton_fermi_momentum, neutron_fermi_momentum);
+        double kinectic_energy_density = FiniteTemperatureKinecticEnergyDensity(mass,
+                                                                                proton_renormalized_chemical_potential,
+                                                                                neutron_renormalized_chemical_potential);
         gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
         
         
-        double thermodynamic_potential = ThermodynamicPotential(total_scalar_density,
-                                                                barionic_density,
-                                                                proton_density,
-                                                                neutron_density,
-                                                                proton_chemical_potential,
-                                                                neutron_chemical_potential,
-                                                                kinectic_energy_density);
+        double proton_entropy_density = EntropyDensity(mass, parameters.temperature, proton_renormalized_chemical_potential);
+        double neutron_entropy_density = EntropyDensity(mass, parameters.temperature, neutron_renormalized_chemical_potential);
+        gsl_vector_set(proton_entropy_density_vector, i, proton_entropy_density);
+        gsl_vector_set(neutron_entropy_density_vector, i, neutron_entropy_density);
+        
+        double total_entropy_density = proton_entropy_density + neutron_entropy_density;
+        
+        double thermodynamic_potential = FiniteTemperatureThermodynamicPotential(kinectic_energy_density,
+                                                                                 proton_scalar_density,
+                                                                                 neutron_scalar_density,
+                                                                                 proton_barionic_density,
+                                                                                 neutron_barionic_density,
+                                                                                 proton_chemical_potential,
+                                                                                 neutron_chemical_potential,
+                                                                                 total_entropy_density);
         
         gsl_vector_set(thermodynamic_potential_vector, i, thermodynamic_potential);
         
-        double pressure = Pressure(thermodynamic_potential);
+        double pressure = FiniteTemperaturePressure(thermodynamic_potential);
         
         gsl_vector_set(pressure_vector, i, pressure);
         
-        double energy_density = EnergyDensity(pressure,
-                                              proton_chemical_potential,
-                                              neutron_chemical_potential,
-                                              proton_density,
-                                              neutron_density);
+        double energy_density = FiniteTemperatureEnergyDensity(pressure,
+                                                               total_entropy_density,
+                                                               proton_chemical_potential,
+                                                               neutron_chemical_potential,
+                                                               proton_barionic_density,
+                                                               neutron_barionic_density);
         
         gsl_vector_set(energy_density_vector, i, energy_density);
         
@@ -502,6 +518,9 @@ int SolveFiniteTemperatureEOS(){
     gsl_vector_free(proton_chemical_potential_vector);
     gsl_vector_free(neutron_chemical_potential_vector);
     gsl_vector_free(thermodynamic_potential_vector);
+    
+    gsl_vector_free(proton_entropy_density_vector);
+    gsl_vector_free(neutron_entropy_density_vector);
     
     gsl_vector_free(pressure_vector);
     gsl_vector_free(energy_density_vector);

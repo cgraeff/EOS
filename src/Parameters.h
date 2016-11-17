@@ -97,11 +97,24 @@ typedef struct _parameters
         } special_case;
     } finite_temperature;
     
-    int fermi_dirac_integrals_max_interval_num;
-    double fermi_dirac_integrals_abs_error;
-    double fermi_dirac_integrals_rel_error;
-    double fermi_dirac_integrals_max_sub_interval;
-    double fermi_dirac_integrals_integration_key;
+    struct _fermi_dirac_integrals{
+        int max_interval_num;
+        double abs_error;
+        double rel_error;
+        double max_sub_interval;
+        double integration_key;
+    } fermi_dirac_integrals;
+    
+    struct _entropy_integrals{
+        int interval_num;
+        double abserr;
+        double lower_limit;
+        double upper_limit;
+        double abs_error;
+        double rel_error;
+        int max_sub_interval;
+        int integration_key;
+    } entropy_integrals;
     
 } Parameters;
 

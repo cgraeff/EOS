@@ -27,4 +27,26 @@ double FiniteTemperatureNeutronChemicalPotential(double renormalized_neutron_che
                                                  double total_scalar_density,
                                                  double proton_barionic_density,
                                                  double neutron_barionic_density);
-double FiniteTemperatureKinecticEnergyDensity();
+double FiniteTemperatureKinecticEnergyDensity(double mass,
+                                              double proton_renormalized_chemical_potential,
+                                              double neutron_renormalized_chemical_potential);
+
+double FiniteTemperatureThermodynamicPotential(double kinectic_energy_density,
+                                               double proton_scalar_density,
+                                               double neutron_scalar_density,
+                                               double proton_barionic_density,
+                                               double neutron_barionic_density,
+                                               double proton_chemical_potential,
+                                               double neutron_chemical_potential,
+                                               double total_entropy_density);
+
+double FiniteTemperaturePressure(double thermodynamic_potential);
+
+double FiniteTemperatureEnergyDensity(double pressure,
+                                      double total_entropy_density,
+                                      double proton_chemical_potential,
+                                      double neutron_chemical_potential,
+                                      double proton_barionic_density,
+                                      double neutron_barionic_density);
+
+double EntropyDensity(double mass, double temperature, double renormalized_chemical_potential);

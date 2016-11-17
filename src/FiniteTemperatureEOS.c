@@ -127,12 +127,9 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
         
         gsl_vector_set(initial_guess,
                        0,
-                       sqrt(parameters.finite_temperature.guesses.mass));
-        gsl_vector_set(initial_guess,
-                       1,
                        sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
         gsl_vector_set(initial_guess,
-                       2,
+                       1,
                        sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
         
         int status = MultidimensionalRootFinder(dimension,
@@ -228,9 +225,9 @@ int FiniteTemperatureMultiDimensionalRootFinderFunction(const gsl_vector   *x,
     // try to reuse by using a function
     double zeroed_gap = mass
                         - parameters.theory.bare_mass
-                        - 2.0 * parameters.theory.G_S * total_scalar_density
-                        + 2.0 * parameters.theory.G_SV * pow(total_scalar_density, 2.0) * total_barionic_density
-                        + 2.0 * parameters.theory.G_SRHO * pow(rho_3, 2.0) * total_scalar_density;
+                        - 2.0 * CONST_HBAR_C * parameters.theory.G_S * total_scalar_density
+                        + 2.0 * CONST_HBAR_C * parameters.theory.G_SV * pow(total_scalar_density, 2.0) * total_barionic_density
+                        + 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * pow(rho_3, 2.0) * total_scalar_density;
     
     double proton_barionic_density_integral = BarionicDensityAtFiniteTemperature(mass,
                                                                                  proton_renormalized_chemical_potential,
@@ -355,6 +352,8 @@ double g(double t, double e, double c)
     return log1p(exp(a)) - a * exp(a) / (1.0 + exp(a));
 }
 
+
+// This is the one I obtained from the derivative of the expression from Buballa / Physics Rep. 2005
 double EntropyIntegrand(double momentum, void * parameters)
 {
     entropy_integrand_parameters * p = (entropy_integrand_parameters *)parameters;
@@ -367,10 +366,8 @@ double EntropyIntegrand(double momentum, void * parameters)
     return pow(momentum, 2.0) * (first_term + second_term);
 }
 
-double Entropy(double mass, double temperature, double renormalized_chemical_potential)
+double EntropyDensity(double mass, double temperature, double renormalized_chemical_potential)
 {
-    int interval_num = 1000;
-    
     entropy_integrand_parameters p;
     p.mass = mass;
     p.temperature = temperature;
@@ -381,32 +378,24 @@ double Entropy(double mass, double temperature, double renormalized_chemical_pot
     F.params = &p;
     
     gsl_integration_workspace * workspace =
-    gsl_integration_workspace_alloc(interval_num);
+    gsl_integration_workspace_alloc(parameters.entropy_integrals.interval_num);
     
-    // FIXME: move parameters to Parameters.[h,c]
-    double integral = 0;
+    double integral;
     double abserr;
-    double lower_limit = 0.0;
-    double upper_limit = parameters.theory.cutoff;
-    double abs_error = 1.0E-3;
-    double rel_error = 1.0E-3;
-    int max_sub_interval = interval_num;
-    int integration_key = GSL_INTEG_GAUSS61;
-    
     gsl_integration_qag(&F,
-                        lower_limit,
-                        upper_limit,
-                        abs_error,
-                        rel_error,
-                        max_sub_interval,
-                        integration_key,
+                        parameters.entropy_integrals.lower_limit,
+                        parameters.entropy_integrals.upper_limit,
+                        parameters.entropy_integrals.abs_error,
+                        parameters.entropy_integrals.rel_error,
+                        parameters.entropy_integrals.max_sub_interval,
+                        parameters.entropy_integrals.integration_key,
                         workspace,
                         &integral,
                         &abserr);
     
     gsl_integration_workspace_free(workspace);
     
-    return CTE_NUM_COLORS * CTE_NUM_FLAVORS * pow(CONST_HBAR_C, -3.0) * integral / pow(M_PI, 2.0);
+    return - CTE_NUM_COLORS * pow(CONST_HBAR_C, -3.0) * integral / pow(M_PI, 2.0);
 }
 
 // FIXME: Remove once I'm sure the other version is working ok
@@ -475,17 +464,17 @@ double FermiDiracDistributionForAntiparticles(double energy,
 double OnedimensionalIntegrator(gsl_function * F, double lower_limit, double upper_limit)
 {
     gsl_integration_workspace * workspace =
-    gsl_integration_workspace_alloc(parameters.fermi_dirac_integrals_max_interval_num);
+    gsl_integration_workspace_alloc(parameters.fermi_dirac_integrals.max_interval_num);
     
     double integral = 0;
     double abserr;
     gsl_integration_qag(F,
                         lower_limit,
                         upper_limit,
-                        parameters.fermi_dirac_integrals_abs_error,
-                        parameters.fermi_dirac_integrals_rel_error,
-                        parameters.fermi_dirac_integrals_max_sub_interval,
-                        parameters.fermi_dirac_integrals_integration_key,
+                        parameters.fermi_dirac_integrals.abs_error,
+                        parameters.fermi_dirac_integrals.rel_error,
+                        parameters.fermi_dirac_integrals.max_sub_interval,
+                        parameters.fermi_dirac_integrals.integration_key,
                         workspace,
                         &integral,
                         &abserr);
@@ -504,13 +493,13 @@ double FiniteTemperatureProtonChemicalPotential(double renormalized_proton_chemi
     double total_barionic_density = proton_barionic_density + neutron_barionic_density;
     double rho_3 = proton_barionic_density - neutron_barionic_density;
 
-    return renormalized_neutron_chemical_potential
-           - 2.0 * parameters.theory.G_V * total_barionic_density
-           - 2.0 * parameters.theory.G_SV * total_barionic_density * pow(total_scalar_density, 2.0)
-           - 2.0 * parameters.theory.G_RHO * rho_3;
-           - 2.0 * parameters.theory.G_VRHO * total_barionic_density * pow(rho_3, 2.0)
-           - 2.0 * parameters.theory.G_VRHO * rho_3 * pow(total_barionic_density, 2.0)
-           - 2.0 * parameters.theory.G_SRHO * rho_3 * pow(total_scalar_density, 2.0);
+    return renormalized_proton_chemical_potential
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_V * total_barionic_density
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_SV * total_barionic_density * pow(total_scalar_density, 2.0)
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_RHO * rho_3
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_VRHO * total_barionic_density * pow(rho_3, 2.0)
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_VRHO * rho_3 * pow(total_barionic_density, 2.0)
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * rho_3 * pow(total_scalar_density, 2.0);
 }
 
 double FiniteTemperatureNeutronChemicalPotential(double renormalized_neutron_chemical_potential,
@@ -523,12 +512,12 @@ double FiniteTemperatureNeutronChemicalPotential(double renormalized_neutron_che
     double rho_3 = proton_barionic_density - neutron_barionic_density;
 
     return renormalized_neutron_chemical_potential
-           - 2.0 * parameters.theory.G_V * total_barionic_density
-           - 2.0 * parameters.theory.G_SV * total_barionic_density * pow(total_scalar_density, 2.0)
-           + 2.0 * parameters.theory.G_RHO * rho_3;
-           - 2.0 * parameters.theory.G_VRHO * total_barionic_density * pow(rho_3, 2.0)
-           + 2.0 * parameters.theory.G_VRHO * rho_3 * pow(total_barionic_density, 2.0)
-           + 2.0 * parameters.theory.G_SRHO * rho_3 * pow(total_scalar_density, 2.0);
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_V * total_barionic_density
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_SV * total_barionic_density * pow(total_scalar_density, 2.0)
+           + 2.0 * CONST_HBAR_C * parameters.theory.G_RHO * rho_3
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_VRHO * total_barionic_density * pow(rho_3, 2.0)
+           + 2.0 * CONST_HBAR_C * parameters.theory.G_VRHO * rho_3 * pow(total_barionic_density, 2.0)
+           + 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * rho_3 * pow(total_scalar_density, 2.0);
 }
 
 // FIXME: just call this FermiDiracDistributionParameters would
@@ -539,6 +528,11 @@ typedef struct _ft_temp_kinectic_energy_integrand_params{
     double temperature;
 } ft_temp_kinectic_energy_integrand_params;
 
+double FiniteTemperatureKinecticEnergyDensityIntegrand(double momentum, void *par);
+
+// FIXME: This function could just be called twice, once for proton and once for neutrons,
+//        instead of doing all the work in a single pass. What would be the appropriate name
+//        for this 'single particle type' version?
 double FiniteTemperatureKinecticEnergyDensity(double mass,
                                               double proton_renormalized_chemical_potential,
                                               double neutron_renormalized_chemical_potential)
@@ -546,22 +540,22 @@ double FiniteTemperatureKinecticEnergyDensity(double mass,
     gsl_function F;
     F.function = &FiniteTemperatureKinecticEnergyDensityIntegrand;
 
-    ft_temp_kinectic_energy_integrand_params *params;
+    ft_temp_kinectic_energy_integrand_params params;
     params.mass = mass;
     params.chemical_potential = proton_renormalized_chemical_potential;
-    params.temperature = &(parameters.temperature);
+    params.temperature = parameters.temperature;
 
-    F.params = params;
+    F.params = &params;
 
-    double integral = OneDimensionalIntegrator(&F, 0.0, parameters.theory.cutoff);
+    double integral = OnedimensionalIntegrator(&F, 0.0, parameters.theory.cutoff);
 
-    double proton_kinectic_energy = CTE_NUM_COLORS * integral / pow(M_PI, 2.0);
+    double proton_kinectic_energy = CTE_NUM_COLORS * integral / (pow(M_PI, 2.0) * pow(CONST_HBAR_C, 3.0));
 
     params.chemical_potential = proton_renormalized_chemical_potential;
 
-    double integral = OneDimensionalIntegrator(&F, 0.0, parameters.theory.cutoff);
+    integral = OnedimensionalIntegrator(&F, 0.0, parameters.theory.cutoff);
 
-    double neutron_kinectic_energy = CTE_NUM_COLORS * integral / pow(M_PI, 2.0);
+    double neutron_kinectic_energy = CTE_NUM_COLORS * integral / (pow(M_PI, 2.0) * pow(CONST_HBAR_C, 3.0));
 
     return proton_kinectic_energy + neutron_kinectic_energy;
 }
@@ -583,8 +577,46 @@ double FiniteTemperatureKinecticEnergyDensityIntegrand(double momentum, void *pa
     return pow(momentum, 2.0) * (dist_plus - dist_minus) / energy;
 }
 
-double FiniteTemperatureThermodynamicPotential()
+double FiniteTemperatureThermodynamicPotential(double kinectic_energy,
+                                               double proton_scalar_density,
+                                               double neutron_scalar_density,
+                                               double proton_barionic_density,
+                                               double neutron_barionic_density,
+                                               double proton_chemical_potential,
+                                               double neutron_chemical_potential,
+                                               double total_entropy_density)
 {
+    double total_scalar_density = proton_scalar_density + neutron_scalar_density;
+    double total_barionic_density = proton_barionic_density + neutron_barionic_density;
+    double rho_3 = proton_barionic_density - neutron_barionic_density;
     
-    return 0;
+    return kinectic_energy
+           + parameters.theory.bare_mass * total_scalar_density
+           - CONST_HBAR_C * parameters.theory.G_S * pow(total_scalar_density, 2.0)
+           + CONST_HBAR_C * parameters.theory.G_V * pow(total_barionic_density, 2.0)
+           + CONST_HBAR_C * parameters.theory.G_SV * pow(total_scalar_density, 2.0) * pow(total_barionic_density, 2.0)
+           + CONST_HBAR_C * parameters.theory.G_RHO * pow(rho_3, 2.0)
+           + CONST_HBAR_C * parameters.theory.G_VRHO * pow(total_barionic_density, 2.0) * pow(rho_3, 2.0)
+           + CONST_HBAR_C * parameters.theory.G_SRHO * pow(total_scalar_density, 2.0) * pow(rho_3, 2.0)
+           - proton_chemical_potential * proton_barionic_density
+           - neutron_chemical_potential * neutron_barionic_density
+           - parameters.temperature * total_entropy_density;
+}
+
+double FiniteTemperaturePressure(double thermodynamic_potential)
+{
+    return - thermodynamic_potential;
+}
+
+double FiniteTemperatureEnergyDensity(double pressure,
+                                      double total_entropy_density,
+                                      double proton_chemical_potential,
+                                      double neutron_chemical_potential,
+                                      double proton_barionic_density,
+                                      double neutron_barionic_density)
+{
+    return - pressure
+           + parameters.temperature * total_entropy_density
+           + proton_chemical_potential * proton_barionic_density
+           + neutron_chemical_potential * neutron_barionic_density;
 }

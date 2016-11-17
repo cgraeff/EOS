@@ -11,6 +11,6 @@
 
 #define CONST_HBAR_C 197.326
 #define CTE_NUM_COLORS 1
-#define CTE_NUM_FLAVORS 1
+#define CTE_NUM_FLAVORS 2
 
 #endif /* Constants_h */
