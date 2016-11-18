@@ -271,4 +271,104 @@ void RunTests()
         
         UnsetFilePath();
     }
+    
+#pragma mark Maps of Mass and Renormalized Chemical Potentials Zeroed Equations
+    
+    // Calculates zeroed gap and barionic densities equations so we can see them
+    // and have an insight of what's going on
+    if (true)
+    {
+        printf("TEST: Maps of Mass and Renormalized Chemical Potentials Zeroed Equations\n");
+        
+        // Set path for and create log file
+        SetFilePath("tests/maps/");
+        FILE * log_file = OpenFile("run.log");
+        
+        // Set path for other files
+        SetFilePath("tests/maps/data/");
+        
+        SetParametersSet("eNJL1");
+        
+        const int num_densities = 10;
+        const int num_temperatures = 10;
+        
+        const double barionic_density[10] = {0.04, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.4, 0.44};
+        const double temperature[10] = {1.0, 3.0, 7.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0};
+        
+        int mass_n_pts = 150;
+        int proton_renorm_chem_pot_n_pts = 150;
+        int neutron_renorm_chem_pot_n_pts = 150;
+        
+        double min_mass = 0.0;
+        double max_mass = 600.0;
+        double min_proton_renormalized_chemical_potential = 0.0;
+        double max_proton_renormalized_chemical_potential = 600.0;
+        double min_neutron_renormalized_chemical_potential = 0.0;
+        double max_neutron_renormalized_chemical_potential = 600.0;
+        
+        double mass_step = (max_mass - min_mass) / (double)(mass_n_pts - 1);
+        double proton_renorm_chem_pot_step = (max_proton_renormalized_chemical_potential - min_proton_renormalized_chemical_potential)
+                                             / (double)(proton_renorm_chem_pot_n_pts - 1);
+        double neutron_renorm_chem_pot_step = (max_neutron_renormalized_chemical_potential - min_neutron_renormalized_chemical_potential)
+                                              / (double)(neutron_renorm_chem_pot_n_pts - 1);
+        
+        double tolerance_dens_p = 0.05;
+        double tolerance_dens_n = 0.05;
+        double tolerance_gap = 0.5;
+        
+        for (int i = 0; i < num_temperatures; i++){ // Temperature
+            
+            parameters.temperature = temperature[i];
+            
+            for (int j = 0; j < num_densities; j++){
+                
+                double mass = 0;
+                for (int k = 0; k < mass_n_pts; k++){
+                    
+                    double proton_renorm_chem_pot = 0;
+                    for (int l = 0; l < proton_renorm_chem_pot_n_pts; l++){
+                        
+                        double neutron_renorm_chem_pot = 0;
+                        for (int m = 0; m < neutron_renorm_chem_pot_n_pts; m++){
+                            
+                            if (fabs(ZeroedGapFunction()) < tolerance_gap)
+                                fprintf(zeroed_gap_file, "%f\t%f\t%f\n", mass, proton_renorm_chem_pot, neutron_renorm_chem_pot);
+                            
+                            if (fabs(ZeroedDensProtonGapFunction()) < tolerance_dens_p)
+                                fprintf(zeroed_dp_gap_file, "%f\t%f\t%f\n", mass, proton_renorm_chem_pot, neutron_renorm_chem_pot);
+                            
+                            if (fabs(ZeroedDensNeutronGapFunction()) < tolerance_dens_n)
+                                fprintf(zeroed_dn_gap_file, "%f\t%f\t%f\n", mass, proton_renorm_chem_pot, neutron_renorm_chem_pot);
+                                
+                            neutron_renorm_chem_pot += neutron_renorm_chem_pot_step;
+                        }
+                        
+                        proton_renorm_chem_pot += proton_renorm_chem_pot_step;
+                    }
+                    
+                    mass += mass_step;
+                }
+                
+                sprintf(filename, "intersection_%d_%d.dat", i, j);
+                FILE * file = OpenFile(filename);
+                fprintf(file, "%20.15E\t%20.15E\n", x_intersection, y_intersection);
+                fclose(file);
+                
+            }
+            
+        }
+        
+        SetFilePath("tests/maps/");
+        FILE * log_file = OpenFile("run.log");
+        
+        fprintf(log_file,
+                "Calculates zeroed gap and barionic densities equations so we can see both\n"
+                "and have an insight of what's going on.\n");
+        PrintParametersToFile(log_file);
+        
+        fclose(log_file);
+        
+        SetFilePath(NULL);
+    }
+
 }
