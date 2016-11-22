@@ -196,6 +196,32 @@ int FiniteTemperatureZeroMassSpecialCaseHelperFunction(const gsl_vector   *x,
     return 0;
 }
 
+double ZeroedGapFunction(double mass,
+                         double proton_scalar_density,
+                         double neutron_scalar_density,
+                         double proton_barionic_density,
+                         double neutron_barionic_density)
+{
+    double total_scalar_density = proton_scalar_density + neutron_scalar_density;
+    double total_barionic_density = proton_barionic_density + neutron_barionic_density;
+    double rho_3 = proton_barionic_density - neutron_barionic_density;
+    
+    return mass
+           - parameters.theory.bare_mass
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_S * total_scalar_density
+           + 2.0 * CONST_HBAR_C * parameters.theory.G_SV * pow(total_scalar_density, 2.0) * total_barionic_density
+           + 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * pow(rho_3, 2.0) * total_scalar_density;
+}
+
+double ZeroedDensFunction(double mass, double barionic_density, double renormalized_chemical_potential)
+{
+    double barionic_density_integral = BarionicDensityAtFiniteTemperature(mass,
+                                                                          renormalized_chemical_potential,
+                                                                          parameters.theory.cutoff);
+    
+    return barionic_density - barionic_density_integral;
+}
+
 int FiniteTemperatureMultiDimensionalRootFinderFunction(const gsl_vector   *x,
                                                         void               *p,
                                                         gsl_vector         *return_values)
@@ -204,8 +230,6 @@ int FiniteTemperatureMultiDimensionalRootFinderFunction(const gsl_vector   *x,
     ft_multi_dim_root_params * params = (ft_multi_dim_root_params *)p;
     double proton_barionic_density = params->proton_barionic_density;
     double neutron_barionic_density = params->neutron_barionic_density;
-    double total_barionic_density = proton_barionic_density + neutron_barionic_density;
-    double rho_3 = proton_barionic_density - neutron_barionic_density;
     
     // take care of mappings
    	const double mass = pow(gsl_vector_get(x, 0), 2.0);
@@ -219,25 +243,17 @@ int FiniteTemperatureMultiDimensionalRootFinderFunction(const gsl_vector   *x,
     double neutron_scalar_density = ScalarDensityAtFiniteTemperature(mass,
                                                                      neutron_renormalized_chemical_potential,
                                                                      parameters.theory.cutoff);
-    double total_scalar_density = proton_scalar_density + neutron_scalar_density;
     
     // the zeroed gap eq is probably the same as in the zero temp case
     // try to reuse by using a function
-    double zeroed_gap = mass
-                        - parameters.theory.bare_mass
-                        - 2.0 * CONST_HBAR_C * parameters.theory.G_S * total_scalar_density
-                        + 2.0 * CONST_HBAR_C * parameters.theory.G_SV * pow(total_scalar_density, 2.0) * total_barionic_density
-                        + 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * pow(rho_3, 2.0) * total_scalar_density;
+    double zeroed_gap = ZeroedGapFunction(mass,
+                                          proton_scalar_density,
+                                          neutron_scalar_density,
+                                          proton_barionic_density,
+                                          neutron_barionic_density);
     
-    double proton_barionic_density_integral = BarionicDensityAtFiniteTemperature(mass,
-                                                                                 proton_renormalized_chemical_potential,
-                                                                                 parameters.theory.cutoff);
-    double neutron_barionic_density_integral = BarionicDensityAtFiniteTemperature(mass,
-                                                                                  neutron_renormalized_chemical_potential,
-                                                                                  parameters.theory.cutoff);
-    
-    double zeroed_p_dens_gap = proton_barionic_density - proton_barionic_density_integral;
-    double zeroed_n_dens_gap = neutron_barionic_density - neutron_barionic_density_integral;
+    double zeroed_p_dens_gap = ZeroedDensFunction(mass, proton_barionic_density, proton_renormalized_chemical_potential);
+    double zeroed_n_dens_gap = ZeroedDensFunction(mass, neutron_barionic_density, neutron_renormalized_chemical_potential);
     
     // Prepare return vector
    	gsl_vector_set(return_values, 0, zeroed_gap);

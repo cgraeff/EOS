@@ -50,3 +50,10 @@ double FiniteTemperatureEnergyDensity(double pressure,
                                       double neutron_barionic_density);
 
 double EntropyDensity(double mass, double temperature, double renormalized_chemical_potential);
+
+double ZeroedGapFunction(double mass,
+                         double proton_scalar_density,
+                         double neutron_scalar_density,
+                         double proton_barionic_density,
+                         double neutron_barionic_density);
+double ZeroedDensFunction(double mass, double some_barionic_density, double some_renormalized_chemical_potential);
