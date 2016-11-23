@@ -290,24 +290,24 @@ void RunTests()
         
         SetParametersSet("eNJL1");
         
-        const int num_densities = 4;
-        const int num_temperatures = 2;
+        const int num_densities = 1;
+        const int num_temperatures = 1;
         
         const double proton_fraction = 0.5;
         
-        const double barionic_density[10] = {0.04, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.4, 0.44};
-        const double temperature[10] = {1.0, 3.0, 7.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0};
+        const double barionic_density[10] = {0.1, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.4, 0.44};
+        const double temperature[10] = {10.0, 3.0, 7.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0};
         
-        int mass_n_pts = 100;
-        int proton_renorm_chem_pot_n_pts = 100;
-        int neutron_renorm_chem_pot_n_pts = 100;
+        int mass_n_pts = 400;
+        int proton_renorm_chem_pot_n_pts = 400;
+        int neutron_renorm_chem_pot_n_pts = 400;
         
         double min_mass = 0.0;
-        double max_mass = 600.0;
+        double max_mass = 1400.0;
         double min_proton_renormalized_chemical_potential = 0.0;
-        double max_proton_renormalized_chemical_potential = 600.0;
+        double max_proton_renormalized_chemical_potential = 1400.0;
         double min_neutron_renormalized_chemical_potential = 0.0;
-        double max_neutron_renormalized_chemical_potential = 600.0;
+        double max_neutron_renormalized_chemical_potential = 1400.0;
         
         double mass_step = (max_mass - min_mass) / (double)(mass_n_pts - 1);
         double proton_renorm_chem_pot_step = (max_proton_renormalized_chemical_potential
@@ -317,9 +317,9 @@ void RunTests()
                                                - min_neutron_renormalized_chemical_potential)
                                               / (double)(neutron_renorm_chem_pot_n_pts - 1);
         
-        double tolerance_dens_p = 0.0005;
-        double tolerance_dens_n = 0.0005;
-        double tolerance_gap = 0.05;
+        double tolerance_dens_p = 0.005;
+        double tolerance_dens_n = 0.005;
+        double tolerance_gap = 1.0;
         
         for (int i = 0; i < num_temperatures; i++){ // Temperature
             
@@ -360,12 +360,14 @@ void RunTests()
                             double neutron_scalar_density = ScalarDensityAtFiniteTemperature(mass,
                                                                                              neutron_renorm_chem_pot,
                                                                                              parameters.theory.cutoff);
+                            double gap = fabs(ZeroedGapFunction(mass,
+                                                                proton_scalar_density,
+                                                                neutron_scalar_density,
+                                                                proton_barionic_density,
+                                                                neutron_barionic_density));
+                            //printf("gap: %f\n", gap);
                             
-                            if (fabs(ZeroedGapFunction(mass,
-                                                       proton_scalar_density,
-                                                       neutron_scalar_density,
-                                                       proton_barionic_density,
-                                                       neutron_barionic_density)) < tolerance_gap)
+                            if (gap < tolerance_gap)
                                 fprintf(zeroed_gap_file,
                                         "%f\t%f\t%f\n",
                                         mass,
@@ -400,6 +402,7 @@ void RunTests()
                 fclose(zeroed_dn_gap_file);
             }
         }
+        printf("\n");
         
         fprintf(log_file,
                 "Calculates zeroed gap and barionic densities equations so we can see them\n"
@@ -408,7 +411,7 @@ void RunTests()
         
         fclose(log_file);
         
-        SetFilePath(NULL);
+       UnsetFilePath();
     }
 
 }

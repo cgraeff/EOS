@@ -74,7 +74,7 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
                        sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
         gsl_vector_set(initial_guess,
                        2,
-                       sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
+                       sqrt(parameters.finite_temperature.guesses.neutron_renormalized_chemical_potential));
         
         int status = MultidimensionalRootFinder(dimension,
                                                 &f,
@@ -130,7 +130,7 @@ int SolveMultiRootsFiniteTemp(double  proton_density,
                        sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
         gsl_vector_set(initial_guess,
                        1,
-                       sqrt(parameters.finite_temperature.guesses.proton_renormalized_chemical_potential));
+                       sqrt(parameters.finite_temperature.guesses.neutron_renormalized_chemical_potential));
         
         int status = MultidimensionalRootFinder(dimension,
                                                 &f,
@@ -208,9 +208,9 @@ double ZeroedGapFunction(double mass,
     
     return mass
            - parameters.theory.bare_mass
-           - 2.0 * CONST_HBAR_C * parameters.theory.G_S * total_scalar_density
-           + 2.0 * CONST_HBAR_C * parameters.theory.G_SV * pow(total_scalar_density, 2.0) * total_barionic_density
-           + 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * pow(rho_3, 2.0) * total_scalar_density;
+           + 2.0 * CONST_HBAR_C * parameters.theory.G_S * total_scalar_density
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_SV * total_scalar_density * pow(total_barionic_density, 2.0)
+           - 2.0 * CONST_HBAR_C * parameters.theory.G_SRHO * total_scalar_density * pow(rho_3, 2.0);
 }
 
 double ZeroedDensFunction(double mass, double barionic_density, double renormalized_chemical_potential)

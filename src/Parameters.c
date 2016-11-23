@@ -306,7 +306,7 @@ Parameters NewCopyOfParametersSetFromTemplate()
   	p.parameters_set_origin = "A standard parameters set. With no theory parameters.";
     p.parameters_set_identifier = "Template";
 
-	p.minimum_density = 1.0E-3; // fm^-3
+	p.minimum_density = 1.0E-1; // fm^-3
 	p.maximum_density = 2.0; // fm^-3
 
 	p.points_number = 3000;
@@ -346,9 +346,9 @@ Parameters NewCopyOfParametersSetFromTemplate()
     p.multiroot.special_case.upper_bound = 0.9; // the use of extremes of the proton fraction
     
     p.finite_temperature.use_last_solution_as_guess = true;
-    p.finite_temperature.guesses.mass = p.theory.nucleon_mass;
-    p.finite_temperature.guesses.proton_renormalized_chemical_potential = 600; // MeV
-    p.finite_temperature.guesses.neutron_renormalized_chemical_potential = 600; // MeV
+    p.finite_temperature.guesses.mass = 55.0;
+    p.finite_temperature.guesses.proton_renormalized_chemical_potential = 300.0; // MeV
+    p.finite_temperature.guesses.neutron_renormalized_chemical_potential = 450.0; // MeV
     p.finite_temperature.special_case.mass_tolerance = 0.1;
     
     p.fermi_dirac_integrals.max_interval_num = 1000;
