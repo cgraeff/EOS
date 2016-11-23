@@ -266,6 +266,11 @@ FILE * OpenFile(const char filename[])
 
 void SetFilePath(const char path[])
 {
+    if (path == NULL){
+        open_file_prefix_path = NULL;
+        return;
+    }
+    
     switch (path[0]){
     case '~':
         printf("SetFilePath: ~ expansion is not supported.\n");
