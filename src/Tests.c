@@ -290,17 +290,17 @@ void RunTests()
         
         SetParametersSet("eNJL1");
         
-        const int num_densities = 1;
+        const int num_densities = 10;
         const int num_temperatures = 1;
         
         const double proton_fraction = 0.5;
         
-        const double barionic_density[10] = {0.1, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.4, 0.44};
-        const double temperature[10] = {10.0, 3.0, 7.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0};
+        const double barionic_density[10] = {0.04, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.4, 0.44};
+        const double temperature[10] = {1.0, 3.0, 7.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0};
         
-        int mass_n_pts = 400;
-        int proton_renorm_chem_pot_n_pts = 400;
-        int neutron_renorm_chem_pot_n_pts = 400;
+        int mass_n_pts = 240;
+        int proton_renorm_chem_pot_n_pts = 240;
+        int neutron_renorm_chem_pot_n_pts = 240;
         
         double min_mass = 0.0;
         double max_mass = 1400.0;
@@ -319,7 +319,7 @@ void RunTests()
         
         double tolerance_dens_p = 0.005;
         double tolerance_dens_n = 0.005;
-        double tolerance_gap = 1.0;
+        double tolerance_gap = 0.5;
         
         for (int i = 0; i < num_temperatures; i++){ // Temperature
             
