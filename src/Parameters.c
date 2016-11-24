@@ -157,7 +157,7 @@ void ParametersSetup(void)
     p.parameters_set_origin = "Helena Pais, Débora P. Menezes, and Constança Providência, Phys. Rev. C 93, 065805 – Published 8 June 2016";
       	
     p.theory.G_S = 1.93;
-    p.theory.G_V = 3;
+    p.theory.G_V = 3.0;
     p.theory.G_SV = -1.8;
     p.theory.G_RHO = 0.0269;
     p.theory.G_VRHO = 0.0;
@@ -231,7 +231,7 @@ void ParametersSetup(void)
     p.theory.G_S = 1.078;
     p.theory.G_V = 1.955;
     p.theory.G_SV = -2.74;
-    p.theory.G_RHO = 0.1114;
+    p.theory.G_RHO = -0.1114;
     p.theory.G_VRHO = 0.0;
     p.theory.G_SRHO = 1.0;
     p.theory.cutoff = 502.466;
