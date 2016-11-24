@@ -2,7 +2,7 @@ SHELL := /bin/bash # Use bash as shell
 TARGET = heos
 
 # List set for multirun
-MULTIRUN_SETS = eNJL1 eNJL2 eNJL3 eNJL1m eNJL2m eNJL1OmegaRho1 eNJL2OmegaRho1 eNJL3SigmaRho1
+MULTIRUN_SETS = eNJL1 eNJL1OmegaRho1 eNJL1OmegaRho2 eNJL2 eNJL2OmegaRho1 eNJL3 eNJL3SigmaRho1 eNJL1m eNJL1mSigmaRho1 eNJL2m eNJL2mSigmaRho1
 
 .PHONY: all run graph tests tgraph clean
 
