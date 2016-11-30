@@ -99,6 +99,11 @@ int SolveZeroTemperatureEOS(){
     double density_step = (parameters.maximum_density - parameters.minimum_density)
                           / (double)(parameters.points_number - 1);
     
+    bool is_mass_zero = false;
+    double zero_mass_density = NAN;
+    double zero_mass_proton_chemical_potential = NAN;
+    double zero_mass_neutron_chemical_potential = NAN;
+    
     for (int i = 0; i < parameters.points_number; i++){
         
         gsl_vector_set(barionic_density_vector, i, barionic_density);
@@ -148,6 +153,16 @@ int SolveZeroTemperatureEOS(){
 		
 		gsl_vector_set(neutron_chemical_potential_vector, i, neutron_chemical_potential);
         
+        if (is_mass_zero == false)
+            if (mass <= parameters.multiroot.special_case.mass_tolerance){
+                
+                zero_mass_density = barionic_density;
+                zero_mass_proton_chemical_potential = proton_chemical_potential;
+                zero_mass_neutron_chemical_potential = neutron_chemical_potential;
+                
+                is_mass_zero = true;
+            }
+        
 		double kinectic_energy_density = KinecticEnergyDensity(mass, proton_fermi_momentum, neutron_fermi_momentum);
         gsl_vector_set(kinectic_energy_density_vector, i, kinectic_energy_density);
 
@@ -179,6 +194,15 @@ int SolveZeroTemperatureEOS(){
     }
     if (options.verbose)
         printf("\n"); // As print inside the loop doesn't use new line, we need one now
+    
+    if (is_mass_zero)
+        printf("\tmass is zero at:\n"
+               "\t\tbarionic density: %f\n"
+               "\t\tproton chemical potential: %f\n"
+               "\t\tneutron chemical potential: %f\n",
+               zero_mass_density,
+               zero_mass_proton_chemical_potential,
+               zero_mass_neutron_chemical_potential);
     
     // Calculate energy per particle
     gsl_vector * energy_by_nucleon_vector = VectorNewVectorFromDivisionElementByElement(energy_density_vector,
